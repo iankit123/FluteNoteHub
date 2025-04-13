@@ -49,7 +49,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
         <div className="relative">
           <YouTubePlayer 
             videoUrl={tutorial.videoUrl || ''} 
-            thumbnailUrl={tutorial.thumbnailUrl}
+            thumbnailUrl={tutorial.thumbnailUrl || undefined}
             title={tutorial.title}
             onReady={() => onPlay?.(tutorial)}
           />
@@ -65,7 +65,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
           <div className="flex justify-between">
             <h3 className="font-poppins font-semibold text-lg">{tutorial.title}</h3>
             <span className="text-xs text-dark-slate/50">
-              {tutorial.updatedAt ? `Updated ${formatTimeAgo(tutorial.updatedAt)}` : formatTimeAgo(tutorial.createdAt)}
+              {tutorial.updatedAt ? `Updated ${formatTimeAgo(tutorial.updatedAt)}` : formatTimeAgo(tutorial.createdAt || new Date())}
             </span>
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
@@ -204,7 +204,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             </div>
           ) : (
             <div className="text-xs text-dark-slate/50">
-              {formatTimeAgo(tutorial.createdAt)}
+              {formatTimeAgo(tutorial.createdAt || new Date())}
             </div>
           )}
           
