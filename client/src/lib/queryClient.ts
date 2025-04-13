@@ -11,7 +11,7 @@ export async function apiRequest(
   method: string,
   url: string,
   data?: unknown | undefined,
-): Promise<Response> {
+): Promise<any> {
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
@@ -20,6 +20,18 @@ export async function apiRequest(
   });
 
   await throwIfResNotOk(res);
+  
+  // For GET requests, automatically parse the JSON
+  if (method.toUpperCase() === 'GET') {
+    return res.json();
+  }
+  
+  // For other methods, try to parse if content exists
+  const contentType = res.headers.get('content-type');
+  if (contentType && contentType.includes('application/json') && res.status !== 204) {
+    return res.json();
+  }
+  
   return res;
 }
 

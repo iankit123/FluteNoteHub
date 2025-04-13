@@ -198,13 +198,16 @@ const Home: React.FC = () => {
             onClick={async () => {
               try {
                 // Fetch all data from memory storage
-                const tutorialsRes = await apiRequest('GET', '/api/tutorials');
-                const tagsRes = await apiRequest('GET', '/api/tags');
+                const tutorials = await apiRequest('GET', '/api/tutorials');
+                const tags = await apiRequest('GET', '/api/tags');
+                
+                console.log('Fetched tutorials for sync:', tutorials);
+                console.log('Fetched tags for sync:', tags);
                 
                 // Sync to Firebase
                 await firebaseDB.syncMemoryToFirebase(
-                  Array.isArray(tutorialsRes) ? tutorialsRes : [],
-                  Array.isArray(tagsRes) ? tagsRes : []
+                  Array.isArray(tutorials) ? tutorials : [],
+                  Array.isArray(tags) ? tags : []
                 );
                 
                 // Refresh data
