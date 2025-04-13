@@ -6,28 +6,32 @@ interface WaveDividerProps {
 
 const WaveDivider: React.FC<WaveDividerProps> = ({ className = "" }) => {
   return (
-    <div className={`relative w-full h-16 overflow-hidden ${className}`}>
+    <div className={`relative w-full h-12 overflow-hidden ${className}`}>
       <svg
         className="w-full h-full"
         viewBox="0 0 1000 100"
         preserveAspectRatio="none"
+        style={{ transform: "scaleY(-1)" }} // 👈 Flip vertically
       >
-        <defs>
-          <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#6C3FC9" />
-            <stop offset="40%" stopColor="#8D5ED6" />
-            <stop offset="70%" stopColor="#E0A93A" />
-            <stop offset="90%" stopColor="#F9A825" />
-          </linearGradient>
-        </defs>
         <path
-          d="M0,20 C150,60 350,0 500,30 C650,60 850,10 1000,30 L1000,0 L0,0 Z"
-          fill="#6C3FC9"
+          d="M0,50 C200,100 400,0 600,50 C800,100 1000,0 1000,0 L1000,100 L0,100 Z"
+          fill="#F9A825"
+          opacity="0.3"
         />
         <path
-          d="M0,40 C200,80 350,20 500,40 C650,60 800,20 1000,50 L1000,20 C850,0 650,50 500,20 C350,-10 150,40 0,0 Z"
-          fill="url(#waveGradient)"
-          opacity="0.9"
+          d="M0,60 C250,90 400,10 600,60 C750,100 1000,20 1000,20 L1000,100 L0,100 Z"
+          fill="#E0A93A"
+          opacity="0.4"
+        />
+        <path
+          d="M0,40 C300,80 500,0 700,40 C900,80 1000,20 1000,20 L1000,100 L0,100 Z"
+          fill="#8D5ED6"
+          opacity="0.5"
+        />
+        <path
+          d="M0,30 C150,70 450,0 700,30 C900,60 1000,10 1000,10 L1000,100 L0,100 Z"
+          fill="#6C3FC9"
+          opacity="0.6"
         />
       </svg>
     </div>

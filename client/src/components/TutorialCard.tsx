@@ -118,12 +118,12 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
       
       {/* Wave Divider - For YouTube and community posts that have thumbnails */}
       {(isYouTube || (isCommunityShare && tutorial.thumbnailUrl)) && (
-        <div className="relative z-0 -mt-1">
+        <div className="relative z-0 -mt-1 -mb-2">
           <WaveDivider />
         </div>
       )}
       
-      <div className="p-4">
+      <div className="pt-0 px-4 pb-4">
         {/* Title and description for YouTube and Community */}
         {(isYouTube || isCommunityShare) && (
           <>
