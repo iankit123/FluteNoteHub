@@ -146,23 +146,21 @@ const Home: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
             {tutorials && tutorials.map((tutorial) => (
-              <Link key={tutorial.id} href={`/tutorials/${tutorial.id}`}>
-                <a className="cursor-pointer block transition-transform hover:scale-[1.01]">
-                  <TutorialCard
-                    tutorial={tutorial}
-                    onBookmark={(e, tutorial) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleBookmark(tutorial);
-                    }}
-                    onShare={(e, tutorial) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleShare(tutorial);
-                    }}
-                  />
-                </a>
-              </Link>
+              <div key={tutorial.id} className="cursor-pointer transition-transform hover:scale-[1.01]" onClick={() => window.location.href = `/tutorials/${tutorial.id}`}>
+                <TutorialCard
+                  tutorial={tutorial}
+                  onBookmark={(e, tutorial) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleBookmark(tutorial);
+                  }}
+                  onShare={(e, tutorial) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleShare(tutorial);
+                  }}
+                />
+              </div>
             ))}
           </div>
         )}
