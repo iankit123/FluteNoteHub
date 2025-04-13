@@ -31,6 +31,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const isYouTube = tutorial.source === 'youtube';
   const isPersonalNote = tutorial.source === 'personal';
+  const isWebsite = tutorial.source === 'website';
   const isCommunityShare = tutorial.source === 'community';
   
   const handlePlay = () => {
@@ -75,6 +76,35 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             <span className="text-xs text-dark-slate/50">
               {tutorial.updatedAt ? `Updated ${formatTimeAgo(tutorial.updatedAt)}` : formatTimeAgo(tutorial.createdAt || new Date())}
             </span>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tutorial.tags?.map(tag => (
+              <TagBadge key={tag.id} tag={tag} />
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Website Tutorial Header */}
+      {isWebsite && (
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex justify-between">
+            <h3 className="font-poppins font-semibold text-lg">{tutorial.title}</h3>
+            <span className="text-xs text-dark-slate/50">
+              {formatTimeAgo(tutorial.createdAt || new Date())}
+            </span>
+          </div>
+          <div className="mt-2">
+            {tutorial.websiteUrl && (
+              <a 
+                href={tutorial.websiteUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-sm text-royal-purple hover:underline"
+              >
+                {new URL(tutorial.websiteUrl).hostname}
+              </a>
+            )}
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
             {tutorial.tags?.map(tag => (
@@ -181,6 +211,61 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
               </Button>
             )}
           </>
+        )}
+        
+        {/* Website description */}
+        {isWebsite && hasDescription && (
+          <div className="mt-2">
+            <div className="text-dark-slate/70 text-sm">
+              {expanded 
+                ? tutorial.description?.split('\n').map((line, i) => (
+                    <p key={i} className="mb-1">{line || ' '}</p>
+                  ))
+                : <p>{truncateText(firstLine, 100) + (firstLine.length > 100 || tutorial.description?.includes('\n') ? '...' : '')}</p>}
+            </div>
+            
+            <div className="flex">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={toggleDescription} 
+                className="text-royal-purple text-xs mt-1 h-6 px-2 flex items-center"
+              >
+                {expanded ? (
+                  <>
+                    <ChevronUp className="h-3 w-3 mr-1" />
+                    <span>Show Less</span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-3 w-3 mr-1" />
+                    <span>See Full Description</span>
+                  </>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleEditDescription}
+                className="text-royal-purple text-xs mt-1 h-6 px-2 flex items-center"
+              >
+                <Edit className="h-3 w-3 mr-1" />
+                <span>Edit</span>
+              </Button>
+            </div>
+          </div>
+        )}
+        
+        {isWebsite && !hasDescription && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleEditDescription} 
+            className="text-royal-purple text-xs mt-2 h-6 px-2 flex items-center"
+          >
+            <Plus className="h-3 w-3 mr-1" />
+            <span>Add Description</span>
+          </Button>
         )}
         
         {/* Personal note content */}
