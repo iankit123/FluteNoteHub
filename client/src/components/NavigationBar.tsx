@@ -55,15 +55,13 @@ const NavigationBar: React.FC = () => {
         <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 mr-6">
-            <Link href="/">
-              <a className="flex items-center">
-                <svg viewBox="0 0 24 24" className="h-6 w-6 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 8H17C19 8 20 9 20 11V13C20 15 19 16 17 16H12V8Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12 16V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12 8C12 5 11 4 8 4H7C4 4 3 5 3 8V16C3 19 4 20 7 20H8C11 20 12 19 12 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span className="font-poppins font-bold text-xl tracking-tight">FluteNotes</span>
-              </a>
+            <Link href="/" className="flex items-center">
+              <svg viewBox="0 0 24 24" className="h-6 w-6 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 8H17C19 8 20 9 20 11V13C20 15 19 16 17 16H12V8Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 16V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 8C12 5 11 4 8 4H7C4 4 3 5 3 8V16C3 19 4 20 7 20H8C11 20 12 19 12 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className="font-poppins font-bold text-xl tracking-tight">FluteNotes</span>
             </Link>
           </div>
           
@@ -100,10 +98,12 @@ const NavigationBar: React.FC = () => {
             
             <div className="hidden md:flex items-center space-x-6">
               {navItems.map((item) => (
-                <Link key={item.name} href={item.href}>
-                  <a className={`font-medium hover:text-turmeric-yellow transition-colors flex items-center ${isActive(item.href) ? 'text-turmeric-yellow' : ''}`}>
-                    {item.icon} {item.name}
-                  </a>
+                <Link 
+                  key={item.name} 
+                  href={item.href} 
+                  className={`font-medium hover:text-turmeric-yellow transition-colors flex items-center ${isActive(item.href) ? 'text-turmeric-yellow' : ''}`}
+                >
+                  {item.icon} {item.name}
                 </Link>
               ))}
               
@@ -149,12 +149,10 @@ const NavigationBar: React.FC = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link href="/login">
-                  <a className="font-medium">
-                    <Button variant="ghost" size="sm" className="text-ivory-white hover:bg-white/20">
-                      Log in
-                    </Button>
-                  </a>
+                <Link href="/login" className="font-medium">
+                  <Button variant="ghost" size="sm" className="text-ivory-white hover:bg-white/20">
+                    Log in
+                  </Button>
                 </Link>
               )}
             </div>
@@ -182,21 +180,26 @@ const NavigationBar: React.FC = () => {
           <div className="md:hidden px-4 pb-3 bg-royal-purple/90">
             <div className="flex flex-col space-y-2">
               {navItems.map((item) => (
-                <Link key={item.name} href={item.href}>
-                  <a className={`font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center ${isActive(item.href) ? 'text-turmeric-yellow' : ''}`} onClick={() => setMobileMenuOpen(false)}>
-                    {React.cloneElement(item.icon as React.ReactElement, { className: "h-5 w-5 mr-2" })}
-                    {item.name}
-                  </a>
+                <Link 
+                  key={item.name} 
+                  href={item.href}
+                  className={`font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center ${isActive(item.href) ? 'text-turmeric-yellow' : ''}`} 
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {React.cloneElement(item.icon as React.ReactElement, { className: "h-5 w-5 mr-2" })}
+                  {item.name}
                 </Link>
               ))}
               
               {isAuthenticated ? (
                 <>
-                  <Link href="/profile">
-                    <a className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" onClick={() => setMobileMenuOpen(false)}>
-                      <User className="h-5 w-5 mr-2" />
-                      Profile
-                    </a>
+                  <Link 
+                    href="/profile" 
+                    className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" 
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <User className="h-5 w-5 mr-2" />
+                    Profile
                   </Link>
                   <button 
                     className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" 
@@ -210,11 +213,13 @@ const NavigationBar: React.FC = () => {
                   </button>
                 </>
               ) : (
-                <Link href="/login">
-                  <a className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" onClick={() => setMobileMenuOpen(false)}>
-                    <User className="h-5 w-5 mr-2" />
-                    Log in
-                  </a>
+                <Link 
+                  href="/login"
+                  className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" 
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <User className="h-5 w-5 mr-2" />
+                  Log in
                 </Link>
               )}
             </div>
@@ -226,19 +231,22 @@ const NavigationBar: React.FC = () => {
       <footer className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 border-t border-gray-100">
         <div className="flex justify-around items-center py-2">
           {navItems.map((item) => (
-            <Link key={item.name} href={item.href}>
-              <a className={`flex flex-col items-center p-2 ${isActive(item.href) ? 'text-royal-purple' : 'text-dark-slate/60 hover:text-royal-purple'} transition-colors`}>
-                {React.cloneElement(item.icon as React.ReactElement, { className: "h-5 w-5" })}
-                <span className="text-xs mt-1">{item.name}</span>
-              </a>
+            <Link 
+              key={item.name} 
+              href={item.href}
+              className={`flex flex-col items-center p-2 ${isActive(item.href) ? 'text-royal-purple' : 'text-dark-slate/60 hover:text-royal-purple'} transition-colors`}
+            >
+              {React.cloneElement(item.icon as React.ReactElement, { className: "h-5 w-5" })}
+              <span className="text-xs mt-1">{item.name}</span>
             </Link>
           ))}
           
-          <Link href="/profile">
-            <a className={`flex flex-col items-center p-2 ${isActive('/profile') ? 'text-royal-purple' : 'text-dark-slate/60 hover:text-royal-purple'} transition-colors`}>
-              <User className="h-5 w-5" />
-              <span className="text-xs mt-1">Profile</span>
-            </a>
+          <Link 
+            href="/profile"
+            className={`flex flex-col items-center p-2 ${isActive('/profile') ? 'text-royal-purple' : 'text-dark-slate/60 hover:text-royal-purple'} transition-colors`}
+          >
+            <User className="h-5 w-5" />
+            <span className="text-xs mt-1">Profile</span>
           </Link>
         </div>
       </footer>
