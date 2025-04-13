@@ -170,11 +170,11 @@ const Home: React.FC = () => {
                   Explore Tutorials
                 </Button>
               </Link>
-              <Link href="/notes/new">
+              <AddNoteDialog>
                 <Button variant="outline" className="border-royal-purple text-royal-purple hover:bg-royal-purple/10">
                   Create Note
                 </Button>
-              </Link>
+              </AddNoteDialog>
             </div>
           </div>
         )}
