@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { TutorialCardProps } from '@/types';
 import TagBadge from './TagBadge';
+import EditDescriptionDialog from './EditDescriptionDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import YouTubePlayer from '@/components/ui/player';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   onShare 
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const isYouTube = tutorial.source === 'youtube';
   const isPersonalNote = tutorial.source === 'personal';
   const isCommunityShare = tutorial.source === 'community';
@@ -38,12 +40,17 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
     setExpanded(!expanded);
   };
   
+  const handleEditDescription = () => {
+    setEditDialogOpen(true);
+  };
+  
   const hasDescription = !!tutorial.description;
   const firstLine = hasDescription ? 
     tutorial.description?.split('\n')[0] || '' : 
     '';
   
   return (
+    <>
     <div className="bg-white rounded-xl shadow-card card-transition gradient-border overflow-hidden">
       {isYouTube && (
         <div className="relative">
@@ -122,30 +129,41 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                     : truncateText(firstLine, 100) + (firstLine.length > 100 || tutorial.description?.includes('\n') ? '...' : '')}
                 </p>
                 
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={toggleDescription} 
-                  className="text-royal-purple text-xs mt-1 h-6 px-2 flex items-center"
-                >
-                  {expanded ? (
-                    <>
-                      <ChevronUp className="h-3 w-3 mr-1" />
-                      <span>Show Less</span>
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown className="h-3 w-3 mr-1" />
-                      <span>See Full Description</span>
-                    </>
-                  )}
-                </Button>
+                <div className="flex">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={toggleDescription} 
+                    className="text-royal-purple text-xs mt-1 h-6 px-2 flex items-center"
+                  >
+                    {expanded ? (
+                      <>
+                        <ChevronUp className="h-3 w-3 mr-1" />
+                        <span>Show Less</span>
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-3 w-3 mr-1" />
+                        <span>See Full Description</span>
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleEditDescription}
+                    className="text-royal-purple text-xs mt-1 h-6 px-2 flex items-center"
+                  >
+                    <Edit className="h-3 w-3 mr-1" />
+                    <span>Edit</span>
+                  </Button>
+                </div>
               </div>
             ) : (
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => onEdit?.(tutorial)} 
+                onClick={handleEditDescription} 
                 className="text-royal-purple text-xs mt-2 h-6 px-2 flex items-center"
               >
                 <Plus className="h-3 w-3 mr-1" />
@@ -251,6 +269,13 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
         </div>
       </div>
     </div>
+    
+    <EditDescriptionDialog
+      tutorial={tutorial}
+      open={editDialogOpen}
+      onOpenChange={setEditDialogOpen}
+    />
+    </>
   );
 };
 
