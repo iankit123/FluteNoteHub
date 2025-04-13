@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { TutorialCardProps } from '@/types';
 import TagBadge from './TagBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import YouTubePlayer from '@/components/ui/player';
+import { Button } from '@/components/ui/button';
 import { 
   Bookmark, 
   BookmarkCheck,
   MessageSquare, 
   Share2, 
-  Edit 
+  Edit,
+  ChevronDown,
+  ChevronUp,
+  Plus
 } from 'lucide-react';
-import { cn, formatTimeAgo } from '@/lib/utils';
+import { cn, formatTimeAgo, truncateText } from '@/lib/utils';
 
 const TutorialCard: React.FC<TutorialCardProps> = ({ 
   tutorial, 
@@ -21,6 +25,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   onComment, 
   onShare 
 }) => {
+  const [expanded, setExpanded] = useState(false);
   const isYouTube = tutorial.source === 'youtube';
   const isPersonalNote = tutorial.source === 'personal';
   const isCommunityShare = tutorial.source === 'community';
@@ -28,6 +33,15 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   const handlePlay = () => {
     if (onPlay) onPlay(tutorial);
   };
+  
+  const toggleDescription = () => {
+    setExpanded(!expanded);
+  };
+  
+  const hasDescription = !!tutorial.description;
+  const firstLine = hasDescription ? 
+    tutorial.description?.split('\n')[0] || '' : 
+    '';
   
   return (
     <div className="bg-white rounded-xl shadow-card card-transition gradient-border overflow-hidden">
@@ -99,8 +113,44 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
         {(isYouTube || isCommunityShare) && (
           <>
             <h3 className="font-poppins font-semibold text-lg">{tutorial.title}</h3>
-            {tutorial.description && (
-              <p className="text-dark-slate/70 text-sm mt-1">{tutorial.description}</p>
+            
+            {hasDescription ? (
+              <div className="mt-2">
+                <p className="text-dark-slate/70 text-sm">
+                  {expanded 
+                    ? tutorial.description 
+                    : truncateText(firstLine, 100) + (firstLine.length > 100 || tutorial.description?.includes('\n') ? '...' : '')}
+                </p>
+                
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={toggleDescription} 
+                  className="text-royal-purple text-xs mt-1 h-6 px-2 flex items-center"
+                >
+                  {expanded ? (
+                    <>
+                      <ChevronUp className="h-3 w-3 mr-1" />
+                      <span>Show Less</span>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-3 w-3 mr-1" />
+                      <span>See Full Description</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => onEdit?.(tutorial)} 
+                className="text-royal-purple text-xs mt-2 h-6 px-2 flex items-center"
+              >
+                <Plus className="h-3 w-3 mr-1" />
+                <span>Add Description</span>
+              </Button>
             )}
           </>
         )}

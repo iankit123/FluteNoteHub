@@ -15,6 +15,7 @@ export interface TutorialWithTags extends Tutorial {
   author?: Partial<User>;
   commentCount?: number;
   isBookmarked?: boolean;
+  updatedAt?: Date;
 }
 
 export interface NoteWithTags extends Note {
