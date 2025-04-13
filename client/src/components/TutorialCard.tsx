@@ -70,37 +70,57 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
       
       {/* Personal Note Header */}
       {isPersonalNote && (
-        <div className="p-4 border-b border-gray-100">
+        <div className="pt-4 pb-3 px-4 border-b border-gray-100">
           <div className="flex justify-between">
             <h3 className="font-poppins font-semibold text-lg">{tutorial.title}</h3>
             <span className="text-xs text-dark-slate/50">
               {tutorial.updatedAt ? `Updated ${formatTimeAgo(tutorial.updatedAt)}` : formatTimeAgo(tutorial.createdAt || new Date())}
             </span>
           </div>
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="flex items-center mt-3">
+            <div className="w-5 h-5 mr-2 text-turmeric-yellow">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </div>
+            <span className="text-sm text-dark-slate/70">Personal notes</span>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-3">
             {tutorial.tags?.map(tag => (
               <TagBadge key={tag.id} tag={tag} />
             ))}
+            {!tutorial.tags?.length && (
+              <span className="text-xs text-dark-slate/40 italic">No tags</span>
+            )}
           </div>
         </div>
       )}
       
       {/* Website Tutorial Header */}
       {isWebsite && (
-        <div className="p-4 border-b border-gray-100">
+        <div className="pt-4 pb-3 px-4 border-b border-gray-100">
           <div className="flex justify-between">
             <h3 className="font-poppins font-semibold text-lg">{tutorial.title}</h3>
             <span className="text-xs text-dark-slate/50">
               {formatTimeAgo(tutorial.createdAt || new Date())}
             </span>
           </div>
-          <div className="mt-2">
-            {tutorial.websiteUrl && (
+          
+          {tutorial.websiteUrl && (
+            <div className="mt-3 flex items-center bg-royal-purple/5 p-2 rounded-md hover:bg-royal-purple/10 transition-colors">
+              <div className="w-5 h-5 mr-2 text-royal-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </div>
               <a 
                 href={tutorial.websiteUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-sm text-royal-purple hover:underline"
+                className="text-sm font-medium text-royal-purple hover:underline overflow-hidden text-ellipsis flex-1"
               >
                 {(() => {
                   try {
@@ -110,12 +130,23 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                   }
                 })()}
               </a>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
+              <div className="text-royal-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex flex-wrap gap-2 mt-3">
             {tutorial.tags?.map(tag => (
               <TagBadge key={tag.id} tag={tag} />
             ))}
+            {!tutorial.tags?.length && (
+              <span className="text-xs text-dark-slate/40 italic">No tags</span>
+            )}
           </div>
         </div>
       )}
@@ -219,6 +250,11 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
           </>
         )}
         
+        {/* Make the title appear here only if necessary for consistency */}
+        {!(isYouTube || isCommunityShare || isPersonalNote) && !isWebsite && (
+          <h3 className="font-poppins font-semibold text-lg">{tutorial.title}</h3>
+        )}
+        
         {/* Website description */}
         {isWebsite && hasDescription && (
           <div className="mt-2">
@@ -276,9 +312,9 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
         
         {/* Personal note content */}
         {isPersonalNote && (
-          <div className="text-sm text-dark-slate/80 space-y-2">
+          <div className="text-sm text-dark-slate/80 space-y-2 mt-2">
             {tutorial.description && (
-              <>
+              <div className="bg-slate-50 p-3 rounded-md border-l-2 border-turmeric-yellow">
                 {tutorial.description.split('\n').map((line, i) => {
                   if (line.startsWith('[') && line.includes(']')) {
                     const timestampEnd = line.indexOf(']') + 1;
@@ -286,22 +322,24 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                     const text = line.substring(timestampEnd);
                     
                     return (
-                      <p key={i}>
-                        <span className="text-royal-purple font-medium">{timestamp}</span>
-                        {text}
+                      <p key={i} className="mb-2 flex">
+                        <span className="text-royal-purple font-medium bg-royal-purple/10 px-2 py-0.5 rounded-md inline-block mr-2">
+                          {timestamp}
+                        </span>
+                        <span className="flex-1">{text}</span>
                       </p>
                     );
                   } else if (line.startsWith('> ')) {
                     return (
-                      <p key={i} className="bg-turmeric-yellow/20 px-2 py-1 rounded text-dark-slate/90 block mt-3">
-                        {line.substring(2)}
-                      </p>
+                      <div key={i} className="mb-3 bg-turmeric-yellow/20 px-3 py-2 rounded-md border-l-2 border-turmeric-yellow text-dark-slate/90 block mt-3">
+                        <p className="font-medium">{line.substring(2)}</p>
+                      </div>
                     );
                   } else {
-                    return <p key={i}>{line}</p>;
+                    return <p key={i} className="mb-2">{line || ' '}</p>;
                   }
                 })}
-              </>
+              </div>
             )}
           </div>
         )}
