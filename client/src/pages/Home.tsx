@@ -8,9 +8,11 @@ import AddNoteDialog from '@/components/AddNoteDialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { TutorialWithTags } from '@/types';
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useUser } from '@/context/UserContext';
 import { User } from '@shared/schema';
+import { firebaseDB } from '@/lib/firebase';
+import { Database } from 'lucide-react';
 
 const Home: React.FC = () => {
   const { user } = useUser();
@@ -188,8 +190,44 @@ const Home: React.FC = () => {
           </div>
         )}
         
-        {/* Add New Button (Fixed) */}
-        <div className="fixed bottom-24 right-6 z-20 md:bottom-8">
+        {/* Add Sync to Firebase Button */}
+        <div className="fixed bottom-24 right-6 z-20 md:bottom-8 flex flex-col gap-3">
+          <Button
+            variant="outline"
+            className="rounded-full h-14 w-14 flex items-center justify-center bg-white hover:bg-royal-purple/10 border-royal-purple text-royal-purple shadow-lg"
+            onClick={async () => {
+              try {
+                // Fetch all data from memory storage
+                const tutorialsRes = await apiRequest('GET', '/api/tutorials');
+                const tagsRes = await apiRequest('GET', '/api/tags');
+                
+                // Sync to Firebase
+                await firebaseDB.syncMemoryToFirebase(
+                  Array.isArray(tutorialsRes) ? tutorialsRes : [],
+                  Array.isArray(tagsRes) ? tagsRes : []
+                );
+                
+                // Refresh data
+                await queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
+                
+                toast({
+                  title: "Sync Complete",
+                  description: "Your data has been synced to Firebase",
+                });
+              } catch (error) {
+                console.error('Sync error:', error);
+                toast({
+                  title: "Sync Failed",
+                  description: "Failed to sync data to Firebase",
+                  variant: "destructive",
+                });
+              }
+            }}
+            title="Sync to Firebase"
+          >
+            <Database className="h-6 w-6" />
+          </Button>
+          
           <AddNoteDialog />
         </div>
       </main>

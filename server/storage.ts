@@ -187,6 +187,44 @@ export class MemStorage implements IStorage {
     instructors.forEach(instructor => {
       this.createUser(instructor);
     });
+    
+    // Create some sample tutorials
+    const sampleTutorials = [
+      {
+        title: "YouTube Tutorial Example",
+        description: "Learn basic flute techniques with this comprehensive tutorial for beginners.",
+        thumbnailUrl: "https://img.youtube.com/vi/oV4z-U-AuaY/hqdefault.jpg",
+        videoUrl: "https://www.youtube.com/watch?v=oV4z-U-AuaY",
+        websiteUrl: null,
+        source: "youtube",
+        authorId: 2, // David Chen
+        duration: "12:45"
+      },
+      {
+        title: "Website Tutorial on Flute Posture",
+        description: "Essential guide to proper flute posture and breathing techniques.",
+        thumbnailUrl: "https://images.unsplash.com/photo-1548123378-bde4ced4e0c4?auto=format&fit=crop&w=600&h=400",
+        videoUrl: null,
+        websiteUrl: "https://flutematters.com/posture-techniques",
+        source: "website",
+        authorId: 3, // Michelle Taylor
+        duration: "20:00"
+      },
+      {
+        title: "My Personal Practice Notes",
+        description: "Personal practice notes with key insights on breathing technique.",
+        thumbnailUrl: null,
+        videoUrl: null,
+        websiteUrl: null,
+        source: "personal",
+        authorId: 1, // Emma
+        duration: "15:00"
+      }
+    ];
+    
+    sampleTutorials.forEach(tutorial => {
+      this.createTutorial(tutorial);
+    });
   }
   
   // Users

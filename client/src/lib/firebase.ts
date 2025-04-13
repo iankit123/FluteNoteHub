@@ -72,11 +72,19 @@ export const firebaseDB = {
       }
       
       const now = new Date();
+      
+      // Ensure all properties are properly defined with null fallbacks
       const newTutorial: Tutorial = {
-        ...tutorial,
         id: nextId,
-        createdAt: now,
-        authorId: tutorial.authorId || null
+        title: tutorial.title,
+        description: tutorial.description ?? null,
+        thumbnailUrl: tutorial.thumbnailUrl ?? null,
+        videoUrl: tutorial.videoUrl ?? null,
+        websiteUrl: tutorial.websiteUrl ?? null,
+        source: tutorial.source ?? null,
+        duration: tutorial.duration ?? null,
+        authorId: tutorial.authorId ?? null,
+        createdAt: now
       };
       
       await set(ref(database, `tutorials/${nextId}`), newTutorial);
