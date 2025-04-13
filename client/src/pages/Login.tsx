@@ -128,10 +128,8 @@ const Login: React.FC = () => {
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-center text-dark-slate/70">
             Don't have an account?{' '}
-            <Link href="/register">
-              <a className="text-royal-purple hover:underline">
-                Sign up
-              </a>
+            <Link href="/register" className="text-royal-purple hover:underline">
+              Sign up
             </Link>
           </div>
           

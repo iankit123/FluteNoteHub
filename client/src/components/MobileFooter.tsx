@@ -21,11 +21,13 @@ const MobileFooter: React.FC = () => {
     <footer className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 border-t border-gray-100">
       <div className="flex justify-around items-center py-2">
         {navItems.map((item) => (
-          <Link key={item.name} href={item.href}>
-            <a className={`flex flex-col items-center p-2 ${isActive(item.href) ? 'text-royal-purple' : 'text-dark-slate/60 hover:text-royal-purple'} transition-colors`}>
-              {item.icon}
-              <span className="text-xs mt-1">{item.name}</span>
-            </a>
+          <Link 
+            key={item.name} 
+            href={item.href}
+            className={`flex flex-col items-center p-2 ${isActive(item.href) ? 'text-royal-purple' : 'text-dark-slate/60 hover:text-royal-purple'} transition-colors`}
+          >
+            {item.icon}
+            <span className="text-xs mt-1">{item.name}</span>
           </Link>
         ))}
       </div>
