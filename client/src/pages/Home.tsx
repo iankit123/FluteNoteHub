@@ -124,7 +124,7 @@ const Home: React.FC = () => {
 
         {/* Tutorial Cards Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="bg-white rounded-xl shadow-card h-80 animate-pulse">
                 <div className="bg-gray-200 h-48 rounded-t-xl"></div>
@@ -144,21 +144,32 @@ const Home: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
             {tutorials && tutorials.map((tutorial) => (
-              <TutorialCard
-                key={tutorial.id}
-                tutorial={tutorial}
-                onBookmark={handleBookmark}
-                onShare={handleShare}
-              />
+              <Link key={tutorial.id} href={`/tutorials/${tutorial.id}`}>
+                <a className="cursor-pointer block transition-transform hover:scale-[1.01]">
+                  <TutorialCard
+                    tutorial={tutorial}
+                    onBookmark={(e, tutorial) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleBookmark(tutorial);
+                    }}
+                    onShare={(e, tutorial) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleShare(tutorial);
+                    }}
+                  />
+                </a>
+              </Link>
             ))}
           </div>
         )}
         
         {/* Empty State */}
         {tutorials && tutorials.length === 0 && (
-          <div className="flex flex-col items-center justify-center bg-white/70 rounded-xl shadow-sm p-10 text-center">
+          <div className="flex flex-col items-center justify-center bg-white/70 rounded-xl shadow-sm p-10 text-center mb-24">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-royal-purple/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
             </svg>

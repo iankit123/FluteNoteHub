@@ -375,7 +375,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
               </button>
             )}
             <button 
-              onClick={() => onBookmark?.(tutorial)} 
+              onClick={(e) => onBookmark?.(e, tutorial)} 
               className={cn(
                 "transition-colors",
                 tutorial.isBookmarked ? "text-royal-purple" : "hover:text-royal-purple text-dark-slate/60"
@@ -388,7 +388,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
               )}
             </button>
             <button 
-              onClick={() => onComment?.(tutorial)} 
+              onClick={(e) => onComment?.(e, tutorial)} 
               className="hover:text-royal-purple transition-colors"
             >
               <div className="flex items-center">
@@ -399,7 +399,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
               </div>
             </button>
             <button 
-              onClick={() => onShare?.(tutorial)} 
+              onClick={(e) => onShare?.(e, tutorial)} 
               className="hover:text-royal-purple transition-colors"
             >
               <Share2 className="h-4 w-4" />

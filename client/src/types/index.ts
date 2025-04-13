@@ -52,9 +52,9 @@ export interface TutorialCardProps {
   tutorial: TutorialWithTags;
   onPlay?: (tutorial: TutorialWithTags) => void;
   onEdit?: (tutorial: TutorialWithTags) => void;
-  onBookmark?: (tutorial: TutorialWithTags) => void;
-  onComment?: (tutorial: TutorialWithTags) => void;
-  onShare?: (tutorial: TutorialWithTags) => void;
+  onBookmark?: (event: React.MouseEvent, tutorial: TutorialWithTags) => void;
+  onComment?: (event: React.MouseEvent, tutorial: TutorialWithTags) => void;
+  onShare?: (event: React.MouseEvent, tutorial: TutorialWithTags) => void;
 }
 
 export interface CommunityPostProps {
