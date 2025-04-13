@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 42 33% 98%;
+    --foreground: 222 47% 15%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 14% 15%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 14% 15%;
+    
+    --primary: 262 56% 52%;
+    --primary-foreground: 42 33% 98%;
+    
+    --secondary: 39 95% 56%;
+    --secondary-foreground: 240 14% 15%;
+    
+    --muted: 240 10% 95%;
+    --muted-foreground: 240 4% 46%;
+    
+    --accent: 192 88% 23%;
+    --accent-foreground: 42 33% 98%;
+    
+    --destructive: 0 84% 70%;
+    --destructive-foreground: 42 33% 98%;
+    
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 262 56% 52%;
+    
+    --radius: 0.5rem;
+    
+    --chart-1: 262 56% 52%;
+    --chart-2: 39 95% 56%;
+    --chart-3: 192 88% 23%;
+    --chart-4: 0 84% 70%;
+    --chart-5: 240 14% 15%;
+    
+    --sidebar-background: 262 56% 52%;
+    --sidebar-foreground: 42 33% 98%;
+    --sidebar-primary: 39 95% 56%;
+    --sidebar-primary-foreground: 240 14% 15%;
+    --sidebar-accent: 192 88% 23%;
+    --sidebar-accent-foreground: 42 33% 98%;
+    --sidebar-border: 262 36% 62%;
+    --sidebar-ring: 39 95% 56%;
+    
+    /* Custom color RGB values for animations */
+    --royal-purple-rgb: 108, 63, 201;
+    --turmeric-yellow-rgb: 249, 168, 37;
+    --coral-pink-rgb: 255, 112, 119;
+    --deep-teal-rgb: 0, 95, 115;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-inter antialiased bg-ivory-white text-dark-slate;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins font-semibold;
+  }
+}
+
+@layer components {
+  .glassmorphism {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20;
+  }
+  
+  .nav-gradient {
+    @apply bg-gradient-to-r from-royal-purple to-deep-teal;
+  }
+  
+  .gradient-border {
+    @apply relative rounded-xl overflow-hidden;
+  }
+  
+  .gradient-border::before {
+    content: '';
+    @apply absolute -inset-[2px] bg-gradient-to-br from-royal-purple to-turmeric-yellow -z-10 rounded-xl opacity-0 transition-opacity duration-300;
+  }
+  
+  .gradient-border:hover::before {
+    @apply opacity-100;
+  }
+  
+  .wave-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='wave' patternUnits='userSpaceOnUse' width='100' height='100' viewBox='0 0 100 100' %3E%3Cpath d='M0 50 Q 25 40, 50 50 T 100 50 V100 H0' fill='none' stroke='%236C3FC911' stroke-width='2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23wave)'/%3E%3C/svg%3E");
+    background-size: 400px;
+  }
+  
+  .card-transition {
+    @apply transition-all duration-300;
+  }
+  
+  .card-transition:hover {
+    @apply translate-y-[-5px] scale-[1.02];
+  }
+  
+  .pulse-animation {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(var(--royal-purple-rgb, 108, 63, 201), 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(var(--royal-purple-rgb, 108, 63, 201), 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(var(--royal-purple-rgb, 108, 63, 201), 0);
+    }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
