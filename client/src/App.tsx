@@ -9,10 +9,12 @@ import EditNote from "@/pages/EditNote";
 import NewTutorial from "@/pages/NewTutorial";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import Test from "@/pages/Test";
 
 function App() {
   return (
     <Switch>
+      <Route path="/test" component={Test} />
       <Route path="/" component={Home} />
       <Route path="/library" component={MyLibrary} />
       <Route path="/explore" component={Explore} />
