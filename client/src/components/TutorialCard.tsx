@@ -102,7 +102,13 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                 rel="noopener noreferrer" 
                 className="text-sm text-royal-purple hover:underline"
               >
-                {new URL(tutorial.websiteUrl).hostname}
+                {(() => {
+                  try {
+                    return new URL(tutorial.websiteUrl).hostname;
+                  } catch (e) {
+                    return tutorial.websiteUrl;
+                  }
+                })()}
               </a>
             )}
           </div>
