@@ -51,12 +51,14 @@ const youtubeSchema = insertTutorialSchema.extend({
     { message: 'Please enter a valid YouTube URL' }
   ),
   title: z.string().min(3, 'Title must be at least 3 characters'),
+  description: z.string().optional(),
 });
 
 const websiteSchema = insertTutorialSchema.extend({
   videoUrl: z.string().url('Please enter a valid URL'),
   title: z.string().min(3, 'Title must be at least 3 characters'),
   source: z.literal('external'),
+  description: z.string().optional(),
 });
 
 const textNoteSchema = insertNoteSchema.extend({
@@ -121,7 +123,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
         description: 'Your tutorial has been added!',
       });
       setOpen(false);
-      navigate('/');
+      setLocation('/');
     },
     onError: (error: Error) => {
       toast({
@@ -144,7 +146,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
         description: 'Your note has been added!',
       });
       setOpen(false);
-      navigate('/');
+      setLocation('/');
     },
     onError: (error: Error) => {
       toast({
@@ -283,7 +285,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
                     <FormItem>
                       <FormLabel>Description (Optional)</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Add a description..." {...field} />
+                        <Textarea placeholder="Add a description..." value={field.value || ''} onChange={field.onChange} onBlur={field.onBlur} ref={field.ref} name={field.name} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -337,7 +339,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
                     <FormItem>
                       <FormLabel>Description (Optional)</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Add a description..." {...field} />
+                        <Textarea placeholder="Add a description..." value={field.value || ''} onChange={field.onChange} onBlur={field.onBlur} ref={field.ref} name={field.name} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -378,7 +380,11 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
                         <Textarea 
                           placeholder="Write your notes here..."
                           className="min-h-[150px]"
-                          {...field} 
+                          value={field.value || ''}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ref={field.ref}
+                          name={field.name}
                         />
                       </FormControl>
                       <FormMessage />

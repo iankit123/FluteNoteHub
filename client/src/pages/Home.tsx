@@ -4,15 +4,16 @@ import { Link } from 'wouter';
 import NavigationBar from '@/components/NavigationBar';
 import TutorialCard from '@/components/TutorialCard';
 import FloatingMusicNotes from '@/components/FloatingMusicNotes';
+import AddNoteDialog from '@/components/AddNoteDialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { TutorialWithTags } from '@/types';
 import { apiRequest } from '@/lib/queryClient';
-import { Plus } from 'lucide-react';
+import { useUser } from '@/context/UserContext';
+import { User } from '@shared/schema';
 
 const Home: React.FC = () => {
-  // Temporary fix: use mock user to troubleshoot context issues
-  const user = null; 
+  const { user } = useUser();
   const { toast } = useToast();
   const [activeFilter, setActiveFilter] = useState<string>('Recent Notes');
 
@@ -180,14 +181,7 @@ const Home: React.FC = () => {
         
         {/* Add New Button (Fixed) */}
         <div className="fixed bottom-24 right-6 z-20 md:bottom-8">
-          <Link href="/tutorials/new">
-            <Button 
-              className="bg-coral-pink hover:bg-coral-pink/90 text-ivory-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center pulse-animation p-0"
-              aria-label="Add new tutorial or note"
-            >
-              <Plus className="h-6 w-6" />
-            </Button>
-          </Link>
+          <AddNoteDialog />
         </div>
       </main>
     </>
