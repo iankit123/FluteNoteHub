@@ -5,6 +5,7 @@ import TagBadge from './TagBadge';
 import EditDescriptionDialog from './EditDescriptionDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import YouTubePlayer from '@/components/ui/player';
+import WaveDivider from '@/components/ui/wave-divider';
 import { Button } from '@/components/ui/button';
 import { 
   Bookmark, 
@@ -113,6 +114,11 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             </button>
           )}
         </div>
+      )}
+      
+      {/* Wave Divider - For YouTube and community posts that have thumbnails */}
+      {(isYouTube || (isCommunityShare && tutorial.thumbnailUrl)) && (
+        <WaveDivider className="transform translate-y-[-0.5rem]" />
       )}
       
       <div className="p-4">
