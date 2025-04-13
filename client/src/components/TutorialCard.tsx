@@ -52,7 +52,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   
   return (
     <>
-    <div className="bg-white rounded-xl shadow-card card-transition gradient-border overflow-hidden">
+    <div className="bg-white rounded-xl shadow-card card-transition gradient-border overflow-hidden relative">
       {isYouTube && (
         <div className="relative">
           <YouTubePlayer 
@@ -118,7 +118,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
       
       {/* Wave Divider - For YouTube and community posts that have thumbnails */}
       {(isYouTube || (isCommunityShare && tutorial.thumbnailUrl)) && (
-        <WaveDivider className="transform translate-y-[-0.5rem]" />
+        <WaveDivider className="transform translate-y-[-2px]" />
       )}
       
       <div className="p-4">
