@@ -131,11 +131,13 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             
             {hasDescription ? (
               <div className="mt-2">
-                <p className="text-dark-slate/70 text-sm">
+                <div className="text-dark-slate/70 text-sm">
                   {expanded 
-                    ? tutorial.description 
-                    : truncateText(firstLine, 100) + (firstLine.length > 100 || tutorial.description?.includes('\n') ? '...' : '')}
-                </p>
+                    ? tutorial.description?.split('\n').map((line, i) => (
+                        <p key={i} className="mb-1">{line || ' '}</p>
+                      ))
+                    : <p>{truncateText(firstLine, 100) + (firstLine.length > 100 || tutorial.description?.includes('\n') ? '...' : '')}</p>}
+                </div>
                 
                 <div className="flex">
                   <Button 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -110,6 +110,9 @@ const EditDescriptionDialog: React.FC<EditDescriptionDialogProps> = ({
                       name={field.name}
                     />
                   </FormControl>
+                  <div className="text-xs text-dark-slate/60 mt-1">
+                    Press Enter to create a new paragraph. Line breaks will be preserved when displaying the description.
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
