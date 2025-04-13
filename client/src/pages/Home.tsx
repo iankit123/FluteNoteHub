@@ -7,12 +7,12 @@ import FloatingMusicNotes from '@/components/FloatingMusicNotes';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { TutorialWithTags } from '@/types';
-import { useUser } from '@/context/UserContext';
 import { apiRequest } from '@/lib/queryClient';
 import { Plus } from 'lucide-react';
 
 const Home: React.FC = () => {
-  const { user } = useUser();
+  // Temporary fix: use mock user to troubleshoot context issues
+  const user = null; 
   const { toast } = useToast();
   const [activeFilter, setActiveFilter] = useState<string>('Recent Notes');
 
