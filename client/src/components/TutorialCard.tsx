@@ -118,7 +118,9 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
       
       {/* Wave Divider - For YouTube and community posts that have thumbnails */}
       {(isYouTube || (isCommunityShare && tutorial.thumbnailUrl)) && (
-        <WaveDivider className="transform translate-y-[-2px]" />
+        <div className="relative z-0 -mt-1">
+          <WaveDivider />
+        </div>
       )}
       
       <div className="p-4">
