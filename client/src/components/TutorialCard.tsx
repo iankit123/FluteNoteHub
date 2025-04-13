@@ -380,6 +380,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                 "transition-colors",
                 tutorial.isBookmarked ? "text-royal-purple" : "hover:text-royal-purple text-dark-slate/60"
               )}
+              title="Bookmark"
             >
               {tutorial.isBookmarked ? (
                 <BookmarkCheck className="h-4 w-4" />
@@ -390,6 +391,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             <button 
               onClick={(e) => onComment?.(e, tutorial)} 
               className="hover:text-royal-purple transition-colors"
+              title="Comment"
             >
               <div className="flex items-center">
                 <MessageSquare className="h-4 w-4" />
@@ -401,8 +403,31 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             <button 
               onClick={(e) => onShare?.(e, tutorial)} 
               className="hover:text-royal-purple transition-colors"
+              title="Share"
             >
               <Share2 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.confirm(`Are you sure you want to delete "${tutorial.title}"?`)) {
+                  fetch(`/api/tutorials/${tutorial.id}`, { method: 'DELETE' })
+                    .then(() => {
+                      window.location.reload();
+                    })
+                    .catch(err => {
+                      console.error('Failed to delete tutorial:', err);
+                      alert('Failed to delete tutorial');
+                    });
+                }
+              }}
+              className="hover:text-red-500 transition-colors"
+              title="Delete"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/>
+              </svg>
             </button>
           </div>
         </div>
