@@ -53,7 +53,12 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   
   return (
     <>
-    <div className="bg-white rounded-xl shadow-card card-transition gradient-border overflow-hidden relative">
+    <div className={cn(
+      "bg-white rounded-xl shadow-card card-transition overflow-hidden relative",
+      isYouTube && "border-l-4 border-royal-purple",
+      isWebsite && "border-l-4 border-teal-500",
+      isPersonalNote && "border-l-4 border-turmeric-yellow"
+    )}>
       {isYouTube && (
         <div className="relative">
           <YouTubePlayer 
