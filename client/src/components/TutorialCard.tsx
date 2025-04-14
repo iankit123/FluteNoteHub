@@ -122,15 +122,17 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.open(tutorial.websiteUrl, '_blank', 'noopener,noreferrer');
+                    if (tutorial.websiteUrl) {
+                      window.open(tutorial.websiteUrl, '_blank', 'noopener,noreferrer');
+                    }
                   }}
                 >
                   {(() => {
                     try {
-                      const url = new URL(tutorial.websiteUrl);
+                      const url = new URL(tutorial.websiteUrl || '');
                       return url.hostname.replace('www.', '');
                     } catch (e) {
-                      return tutorial.websiteUrl;
+                      return tutorial.websiteUrl || 'Unknown URL';
                     }
                   })()}
                 </span>
@@ -140,7 +142,9 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.open(tutorial.websiteUrl, '_blank', 'noopener,noreferrer');
+                    if (tutorial.websiteUrl) {
+                      window.open(tutorial.websiteUrl, '_blank', 'noopener,noreferrer');
+                    }
                   }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

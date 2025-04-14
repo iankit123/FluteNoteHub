@@ -252,47 +252,48 @@ const Home: React.FC = () => {
           </div>
         )}
         
-        {/* Add Sync to Firebase Button */}
+        {/* Floating Actions */}
         <div className="fixed bottom-24 right-6 z-20 md:bottom-8 flex flex-col gap-3">
-          <Button
-            variant="outline"
-            className="rounded-full h-14 w-14 flex items-center justify-center bg-white hover:bg-royal-purple/10 border-royal-purple text-royal-purple shadow-lg"
-            onClick={async () => {
-              try {
-                // Fetch all data from memory storage
-                const tutorials = await apiRequest('GET', '/api/tutorials');
-                const tags = await apiRequest('GET', '/api/tags');
-                
-                console.log('Fetched tutorials for sync:', tutorials);
-                console.log('Fetched tags for sync:', tags);
-                
-                // Sync to Firebase
-                await firebaseDB.syncMemoryToFirebase(
-                  Array.isArray(tutorials) ? tutorials : [],
-                  Array.isArray(tags) ? tags : []
-                );
-                
-                // Refresh data
-                await queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
-                
-                toast({
-                  title: "Sync Complete",
-                  description: "Your data has been synced to Firebase",
-                });
-              } catch (error) {
-                console.error('Sync error:', error);
-                toast({
-                  title: "Sync Failed",
-                  description: "Failed to sync data to Firebase",
-                  variant: "destructive",
-                });
-              }
-            }}
-            title="Sync to Firebase"
-          >
-            <Database className="h-6 w-6" />
-          </Button>
+          {/* Sync to Firebase Button - Only visible to instructors */}
+          {user && user.isInstructor && (
+            <Button
+              variant="outline"
+              className="rounded-full h-14 w-14 flex items-center justify-center bg-white hover:bg-royal-purple/10 border-royal-purple text-royal-purple shadow-lg"
+              onClick={async () => {
+                try {
+                  // Fetch all data from memory storage
+                  const tutorials = await apiRequest('GET', '/api/tutorials');
+                  const tags = await apiRequest('GET', '/api/tags');
+                  
+                  // Sync to Firebase
+                  await firebaseDB.syncMemoryToFirebase(
+                    Array.isArray(tutorials) ? tutorials : [],
+                    Array.isArray(tags) ? tags : []
+                  );
+                  
+                  // Refresh data
+                  await queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
+                  
+                  toast({
+                    title: "Sync Complete",
+                    description: "Your data has been synced to Firebase",
+                  });
+                } catch (error) {
+                  console.error('Sync error:', error);
+                  toast({
+                    title: "Sync Failed",
+                    description: "Failed to sync data to Firebase",
+                    variant: "destructive",
+                  });
+                }
+              }}
+              title="Sync to Firebase (Instructor Only)"
+            >
+              <Database className="h-6 w-6" />
+            </Button>
+          )}
           
+          {/* Add Note Button - Visible to all users */}
           <AddNoteDialog />
         </div>
       </main>
