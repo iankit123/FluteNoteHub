@@ -343,7 +343,7 @@ const Home: React.FC = () => {
                     <h2 className="font-poppins font-semibold text-xl text-dark-slate mb-2">No music added yet</h2>
                     <p className="text-dark-slate/70 mb-6 max-w-md">Add YouTube links to your favorite flute music to build a collection of inspiring performances.</p>
                     <div className="flex flex-wrap gap-3 justify-center">
-                      <AddNoteDialog>
+                      <AddNoteDialog initialCategory="music">
                         <Button variant="default" className="bg-royal-purple text-ivory-white">
                           Add YouTube Music
                         </Button>
@@ -401,7 +401,7 @@ const Home: React.FC = () => {
           )}
           
           {/* Add Note Button - Visible to all users */}
-          <AddNoteDialog />
+          <AddNoteDialog initialCategory={activeTab === 'good-music' ? 'music' : 'learning'} />
         </div>
       </main>
     </>
