@@ -320,7 +320,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children, initialCategory
               </TabsTrigger>
             )}
             {activeTab === 'music' && (
-              <div className="col-span-2 flex items-center justify-center text-xs text-blue-600 bg-blue-50 rounded-r-lg">
+              <div className="col-span-2 flex items-center justify-center text-xs text-blue-600 bg-white rounded-r-lg border border-blue-100">
                 For music collection, we only support YouTube videos
               </div>
             )}

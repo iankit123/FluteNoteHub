@@ -78,14 +78,14 @@
   
   /* Custom Tab Styling */
   .tabs-list {
-    @apply bg-blue-50 p-1 rounded-lg border border-blue-100;
+    @apply bg-white p-1 rounded-lg border border-blue-100;
   }
   
   .tabs-trigger {
-    @apply data-[state=active]:bg-blue-600 data-[state=active]:text-white 
+    @apply data-[state=active]:bg-blue-500 data-[state=active]:text-white 
            data-[state=inactive]:bg-white data-[state=inactive]:text-blue-600 
-           transition-all duration-300 shadow-sm hover:brightness-105
-           rounded-md;
+           transition-all duration-300 shadow-sm hover:bg-blue-100
+           rounded-md border border-blue-100;
   }
   
   /* Navigation gradient options */
