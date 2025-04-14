@@ -7,7 +7,6 @@ const MobileFooter: React.FC = () => {
 
   const navItems = [
     { name: 'Home', icon: <Home className="h-5 w-5" />, href: '/' },
-    { name: 'Library', icon: <BookOpen className="h-5 w-5" />, href: '/library' },
     { name: 'Explore', icon: <Compass className="h-5 w-5" />, href: '/explore' },
     { name: 'Discuss', icon: <MessageSquare className="h-5 w-5" />, href: '/community' },
     { name: 'Profile', icon: <User className="h-5 w-5" />, href: '/profile' },

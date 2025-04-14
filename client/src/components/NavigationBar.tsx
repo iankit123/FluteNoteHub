@@ -40,7 +40,6 @@ const NavigationBar: React.FC = () => {
 
   const navItems = [
     { name: 'Home', icon: <Home className="h-4 w-4 mr-1" />, href: '/' },
-    { name: 'My Library', icon: <BookOpen className="h-4 w-4 mr-1" />, href: '/library' },
     { name: 'Explore', icon: <Compass className="h-4 w-4 mr-1" />, href: '/explore' },
     { name: 'Discussions', icon: <MessageSquare className="h-4 w-4 mr-1" />, href: '/community' },
   ];

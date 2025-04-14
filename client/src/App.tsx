@@ -1,7 +1,6 @@
 import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
-import MyLibrary from "@/pages/MyLibrary";
 import Explore from "@/pages/Explore";
 import Community from "@/pages/Community";
 import Profile from "@/pages/Profile";
@@ -18,7 +17,6 @@ function App() {
     <Switch>
       <Route path="/test" component={Test} />
       <Route path="/" component={Home} />
-      <Route path="/library" component={MyLibrary} />
       <Route path="/explore" component={Explore} />
       <Route path="/community" component={Community} />
       <Route path="/profile" component={Profile} />
