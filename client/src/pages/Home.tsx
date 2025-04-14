@@ -195,9 +195,14 @@ const Home: React.FC = () => {
                     </div>
                   </div>
                   <h3 className="font-poppins font-semibold text-lg text-dark-slate mb-2">{note.title}</h3>
-                  <p className="text-dark-slate/70 text-sm mb-4 line-clamp-4 h-24">
-                    {note.content}
-                  </p>
+                  <div className="text-dark-slate/70 text-sm mb-4 overflow-hidden h-24">
+                    {note.content.split('\n').slice(0, 4).map((line, idx) => (
+                      <p key={idx} className="mb-1">{line || ' '}</p>
+                    ))}
+                    {note.content.split('\n').length > 4 && (
+                      <p className="text-royal-purple font-medium text-xs mt-1">+ {note.content.split('\n').length - 4} more lines</p>
+                    )}
+                  </div>
                   <div className="flex justify-between items-center pt-2 border-t border-gray-100">
                     <div className="flex items-center space-x-1">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-royal-purple" viewBox="0 0 20 20" fill="currentColor">
