@@ -74,40 +74,25 @@ export const firebaseDB = {
     }
   },
   
-  async createTutorial(tutorial: InsertTutorial): Promise<Tutorial> {
+  async createTutorial(tutorial: Tutorial): Promise<boolean> {
     try {
-      // First, get the highest ID to ensure we increment properly
-      const tutorialsRef = ref(database, 'tutorials');
-      const snapshot = await get(tutorialsRef);
-      
-      let nextId = 1;
-      if (snapshot.exists()) {
-        const tutorialsObj = snapshot.val();
-        const ids = Object.keys(tutorialsObj).map(id => parseInt(id));
-        nextId = Math.max(...ids, 0) + 1;
-      }
-      
-      const now = new Date();
-      
-      // Ensure all properties are properly defined with null fallbacks
-      const newTutorial: Tutorial = {
-        id: nextId,
+      // Save tutorial directly to Firebase using its existing ID
+      await set(ref(database, `tutorials/${tutorial.id}`), {
         title: tutorial.title,
-        description: tutorial.description ?? null,
-        thumbnailUrl: tutorial.thumbnailUrl ?? null,
-        videoUrl: tutorial.videoUrl ?? null,
-        websiteUrl: tutorial.websiteUrl ?? null,
-        source: tutorial.source ?? null,
-        duration: tutorial.duration ?? null,
-        authorId: tutorial.authorId ?? null,
-        createdAt: now
-      };
-      
-      await set(ref(database, `tutorials/${nextId}`), newTutorial);
-      return newTutorial;
+        description: tutorial.description || null,
+        thumbnailUrl: tutorial.thumbnailUrl || null,
+        videoUrl: tutorial.videoUrl || null,
+        websiteUrl: tutorial.websiteUrl || null,
+        source: tutorial.source || null,
+        duration: tutorial.duration || null,
+        authorId: tutorial.authorId || null,
+        createdAt: tutorial.createdAt || new Date()
+      });
+      console.log(`New tutorial directly saved to Firebase`);
+      return true;
     } catch (error) {
-      console.error("Error creating tutorial:", error);
-      throw error;
+      console.error("Error saving tutorial to Firebase:", error);
+      return false;
     }
   },
   
