@@ -160,8 +160,9 @@ const Home: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+            {/* Render tutorials */}
             {tutorials && tutorials.map((tutorial) => (
-              <div key={tutorial.id} 
+              <div key={`tutorial-${tutorial.id}`} 
                    className="cursor-pointer transition-transform hover:scale-[1.01]"
                    onClick={() => window.location.pathname = `/tutorials/${tutorial.id}`}>
                 <TutorialCard
@@ -179,11 +180,55 @@ const Home: React.FC = () => {
                 />
               </div>
             ))}
+            
+            {/* Render notes */}
+            {notes && notes.map((note) => (
+              <div key={`note-${note.id}`}
+                   className="cursor-pointer transition-transform hover:scale-[1.01] bg-white rounded-xl shadow-card overflow-hidden border-l-4 border-turmeric-yellow"
+                   onClick={() => window.location.pathname = `/notes/${note.id}`}>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="bg-turmeric-yellow/20 text-turmeric-yellow text-xs font-medium px-2.5 py-0.5 rounded-full">
+                      Personal Note
+                    </span>
+                    <div className="text-xs text-gray-500">
+                      {note.createdAt ? formatTimeAgo(new Date(note.createdAt)) : 'Just now'}
+                    </div>
+                  </div>
+                  <h3 className="font-poppins font-semibold text-lg text-dark-slate mb-2">{note.title}</h3>
+                  <p className="text-dark-slate/70 text-sm mb-4 line-clamp-4 h-24">
+                    {note.content}
+                  </p>
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                    <div className="flex items-center space-x-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-royal-purple" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm text-gray-500">Text Note</span>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button 
+                        className="p-1 hover:bg-gray-100 rounded-full"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          // Share functionality for notes can be added here
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
         
         {/* Empty State */}
-        {tutorials && tutorials.length === 0 && (
+        {tutorials && notes && tutorials.length === 0 && notes.length === 0 && (
           <div className="flex flex-col items-center justify-center bg-white/70 rounded-xl shadow-sm p-10 text-center mb-24">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-royal-purple/30 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
