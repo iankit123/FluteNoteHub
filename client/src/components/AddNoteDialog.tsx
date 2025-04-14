@@ -9,6 +9,7 @@ import { useUser } from '@/context/UserContext';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { extractVideoId, getTimestampInSeconds } from '@/lib/utils';
+import { firebaseDB } from '@/lib/firebase';
 
 import {
   Dialog,
