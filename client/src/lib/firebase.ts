@@ -202,6 +202,25 @@ export const firebaseDB = {
   },
 
   // Notes
+  async createNote(note: Note): Promise<boolean> {
+    try {
+      // Save note directly to Firebase
+      await set(ref(database, `notes/${note.id}`), {
+        title: note.title,
+        content: note.content,
+        tutorialId: note.tutorialId || null,
+        userId: note.userId || null,
+        createdAt: note.createdAt || new Date(),
+        updatedAt: note.updatedAt || new Date()
+      });
+      console.log(`Note ${note.id} saved to Firebase`);
+      return true;
+    } catch (error) {
+      console.error(`Error creating note in Firebase:`, error);
+      return false;
+    }
+  },
+
   async deleteNote(id: number): Promise<boolean> {
     try {
       await remove(ref(database, `notes/${id}`));

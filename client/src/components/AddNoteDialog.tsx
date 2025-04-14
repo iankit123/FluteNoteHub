@@ -122,32 +122,12 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
       // First invalidate the tutorials query to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
       
-      // Then sync the data to Firebase
+      // Immediately save this tutorial to Firebase
       try {
-        // Fetch latest data
-        console.log("Fetching tutorials for Firebase sync...");
-        const tutorials = await apiRequest('GET', '/api/tutorials');
-        console.log("Received tutorials for sync:", tutorials);
-        
-        const tags = await apiRequest('GET', '/api/tags');
-        console.log("Received tags for sync:", tags);
-        
-        // Sync to Firebase
-        console.log("Starting Firebase sync with", 
-          Array.isArray(tutorials) ? tutorials.length : 0, 
-          "tutorials and", 
-          Array.isArray(tags) ? tags.length : 0, 
-          "tags");
-          
-        await firebaseDB.syncMemoryToFirebase(
-          Array.isArray(tutorials) ? tutorials : [],
-          Array.isArray(tags) ? tags : []
-        );
-        
-        console.log("Auto-sync to Firebase complete after adding tutorial");
+        await firebaseDB.createTutorial(newTutorial);
+        console.log("New tutorial directly saved to Firebase");
       } catch (syncError) {
-        console.error("Error syncing to Firebase:", syncError);
-        // Don't show an error toast since this is automatic in the background
+        console.error("Error saving new tutorial to Firebase:", syncError);
       }
       
       toast({
@@ -176,32 +156,12 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
       // First invalidate the notes query to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['/api/notes'] });
       
-      // Then sync the data to Firebase
+      // Immediately save this note to Firebase
       try {
-        // Fetch latest data
-        console.log("Fetching tutorials for Firebase sync...");
-        const tutorials = await apiRequest('GET', '/api/tutorials');
-        console.log("Received tutorials for sync:", tutorials);
-        
-        const tags = await apiRequest('GET', '/api/tags');
-        console.log("Received tags for sync:", tags);
-        
-        // Sync to Firebase
-        console.log("Starting Firebase sync with", 
-          Array.isArray(tutorials) ? tutorials.length : 0, 
-          "tutorials and", 
-          Array.isArray(tags) ? tags.length : 0, 
-          "tags");
-          
-        await firebaseDB.syncMemoryToFirebase(
-          Array.isArray(tutorials) ? tutorials : [],
-          Array.isArray(tags) ? tags : []
-        );
-        
-        console.log("Auto-sync to Firebase complete after adding note");
+        await firebaseDB.createNote(newNote);
+        console.log("New note directly saved to Firebase");
       } catch (syncError) {
-        console.error("Error syncing to Firebase:", syncError);
-        // Don't show an error toast since this is automatic in the background
+        console.error("Error saving new note to Firebase:", syncError);
       }
       
       toast({
