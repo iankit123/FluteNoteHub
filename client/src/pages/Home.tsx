@@ -19,11 +19,22 @@ const Home: React.FC = () => {
   const { toast } = useToast();
   const [activeFilter, setActiveFilter] = useState<string>('Recent Notes');
 
-  const { data: tutorials, isLoading } = useQuery<TutorialWithTags[]>({
+  const { data: tutorials, isLoading: tutorialsLoading } = useQuery<TutorialWithTags[]>({
     queryKey: ['/api/tutorials'],
     staleTime: 5000, // 5 seconds
     refetchOnMount: 'always',
   });
+  
+  // Also fetch notes if a user is logged in
+  const { data: notes, isLoading: notesLoading } = useQuery({
+    queryKey: ['/api/notes'],
+    staleTime: 5000,
+    refetchOnMount: 'always',
+    enabled: !!user, // Only fetch if user is logged in
+  });
+  
+  // Combine loading states
+  const isLoading = tutorialsLoading || notesLoading;
 
   const handleBookmark = async (tutorial: TutorialWithTags) => {
     if (!user) {

@@ -230,6 +230,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  apiRouter.get("/notes", async (req, res) => {
+    try {
+      // Get all notes from storage
+      const allNotes = [];
+      // Combine notes from all users
+      const users = await storage.getAllUsers();
+      for (const user of users) {
+        const userNotes = await storage.getUserNotes(user.id);
+        allNotes.push(...userNotes);
+      }
+      res.json(allNotes);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch notes" });
+    }
+  });
+  
   apiRouter.get("/tutorials/:id/notes", async (req, res) => {
     try {
       const tutorialId = parseInt(req.params.id);
@@ -367,8 +383,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if bookmark already exists
       const existingBookmark = await storage.checkBookmark(
         bookmarkData.userId,
-        bookmarkData.tutorialId,
-        bookmarkData.noteId
+        bookmarkData.tutorialId || undefined,
+        bookmarkData.noteId || undefined
       );
       
       if (existingBookmark) {
