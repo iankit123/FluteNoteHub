@@ -10,6 +10,7 @@ import TutorialDetail from "@/pages/TutorialDetail";
 import NoteDetail from "@/pages/NoteDetail";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import Metronome from "@/pages/Metronome";
 import Test from "@/pages/Test";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path="/" component={Home} />
       <Route path="/explore" component={Explore} />
       <Route path="/community" component={Community} />
+      <Route path="/metronome" component={Metronome} />
       <Route path="/profile" component={Profile} />
       <Route path="/notes/edit/:id" component={EditNote} />
       <Route path="/notes/new" component={EditNote} />

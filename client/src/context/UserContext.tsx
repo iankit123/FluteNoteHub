@@ -34,11 +34,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const login = async (username: string, password: string): Promise<User> => {
     setIsLoading(true);
     try {
+      console.log("UserContext: Attempting login for", username);
       const res = await apiRequest("POST", "/api/users/login", { username, password });
-      const userData = await res.json();
-      setUser(userData);
-      localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
-      return userData;
+      
+      // Handle Response object directly returned from apiRequest
+      if (res instanceof Response) {
+        const userData = await res.json();
+        console.log("UserContext: Login successful, user data:", userData);
+        setUser(userData);
+        localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
+        return userData;
+      } 
+      
+      // Handle pre-parsed JSON response
+      console.log("UserContext: Login successful, user data:", res);
+      setUser(res);
+      localStorage.setItem("fluteNotesUser", JSON.stringify(res));
+      return res;
     } catch (error) {
       console.error("Login failed", error);
       throw error;
@@ -50,15 +62,27 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const register = async (username: string, displayName: string, password: string): Promise<User> => {
     setIsLoading(true);
     try {
+      console.log("UserContext: Attempting registration for", username);
       const res = await apiRequest("POST", "/api/users/register", { 
         username, 
         displayName, 
         password 
       });
-      const userData = await res.json();
-      setUser(userData);
-      localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
-      return userData;
+      
+      // Handle Response object directly returned from apiRequest
+      if (res instanceof Response) {
+        const userData = await res.json();
+        console.log("UserContext: Registration successful, user data:", userData);
+        setUser(userData);
+        localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
+        return userData;
+      }
+      
+      // Handle pre-parsed JSON response
+      console.log("UserContext: Registration successful, user data:", res);
+      setUser(res);
+      localStorage.setItem("fluteNotesUser", JSON.stringify(res));
+      return res;
     } catch (error) {
       console.error("Registration failed", error);
       throw error;

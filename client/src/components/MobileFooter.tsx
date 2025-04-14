@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import { Home, BookOpen, Compass, MessageSquare, User } from 'lucide-react';
+import { Home, BookOpen, Compass, MessageSquare, User, Clock } from 'lucide-react';
 
 const MobileFooter: React.FC = () => {
   const [location] = useLocation();
@@ -9,6 +9,7 @@ const MobileFooter: React.FC = () => {
     { name: 'Home', icon: <Home className="h-5 w-5" />, href: '/' },
     { name: 'Explore', icon: <Compass className="h-5 w-5" />, href: '/explore' },
     { name: 'Discuss', icon: <MessageSquare className="h-5 w-5" />, href: '/community' },
+    { name: 'Metronome', icon: <Clock className="h-5 w-5" />, href: '/metronome' },
     { name: 'Profile', icon: <User className="h-5 w-5" />, href: '/profile' },
   ];
 
