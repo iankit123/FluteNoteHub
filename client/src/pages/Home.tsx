@@ -160,14 +160,14 @@ const Home: React.FC = () => {
           <TabsList className="grid w-full grid-cols-2 mb-6 tabs-list">
             <TabsTrigger 
               value="notes-to-learn" 
-              className="flex items-center gap-2 tabs-trigger py-2.5"
+              className="flex items-center gap-2 tabs-trigger py-3 px-4"
             >
               <BookOpen className="h-4 w-4" />
               <span>Notes to Learn</span>
             </TabsTrigger>
             <TabsTrigger 
               value="good-music" 
-              className="flex items-center gap-2 tabs-trigger py-2.5"
+              className="flex items-center gap-2 tabs-trigger py-3 px-4"
             >
               <Music className="h-4 w-4" />
               <span>Good Music to Hear</span>

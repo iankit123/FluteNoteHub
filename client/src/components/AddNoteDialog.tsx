@@ -303,24 +303,24 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children, initialCategory
 
         <Tabs defaultValue="youtube" className="mt-4" onValueChange={(v) => setNoteType(v as NoteType)}>
           <TabsList className="grid grid-cols-3 w-full tabs-list">
-            <TabsTrigger value="youtube" className="flex items-center gap-1 tabs-trigger py-2">
+            <TabsTrigger value="youtube" className="flex items-center gap-1 tabs-trigger py-3 px-3">
               {activeTab === 'music' ? <Music className="h-4 w-4" /> : <Video className="h-4 w-4" />}
               <span>{activeTab === 'music' ? 'YouTube Music' : 'YouTube'}</span>
             </TabsTrigger>
             {activeTab !== 'music' && (
-              <TabsTrigger value="website" className="flex items-center gap-1 tabs-trigger py-2">
+              <TabsTrigger value="website" className="flex items-center gap-1 tabs-trigger py-3 px-3">
                 <LinkIcon className="h-4 w-4" />
                 <span>Website</span>
               </TabsTrigger>
             )}
             {activeTab !== 'music' && (
-              <TabsTrigger value="text" className="flex items-center gap-1 tabs-trigger py-2">
+              <TabsTrigger value="text" className="flex items-center gap-1 tabs-trigger py-3 px-3">
                 <FileText className="h-4 w-4" />
                 <span>Text Note</span>
               </TabsTrigger>
             )}
             {activeTab === 'music' && (
-              <div className="col-span-2 flex items-center justify-center text-xs text-blue-600 bg-white rounded-r-lg border border-blue-100">
+              <div className="col-span-2 flex items-center justify-center text-xs text-blue-600 bg-white rounded-r-lg border border-blue-100 py-3 px-3 font-medium">
                 For music collection, we only support YouTube videos
               </div>
             )}
