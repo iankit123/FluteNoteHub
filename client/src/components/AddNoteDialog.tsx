@@ -103,6 +103,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
       description: '',
       websiteUrl: '',
       source: 'website',
+      category: activeTab, // Set category based on active tab
       authorId: user?.id,
     },
   });

@@ -55,6 +55,7 @@ const EditDescriptionDialog: React.FC<EditDescriptionDialogProps> = ({
     mutationFn: async (data: { description: string }) => {
       const res = await apiRequest('PUT', `/api/tutorials/${tutorial.id}`, {
         description: data.description,
+        category: tutorial.category || 'learning', // Preserve the category during updates
       });
       return await res.json();
     },

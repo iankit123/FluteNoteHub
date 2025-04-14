@@ -110,6 +110,7 @@ export const firebaseDB = {
         videoUrl: tutorial.videoUrl || null,
         websiteUrl: tutorial.websiteUrl || null,
         source: tutorial.source || null,
+        category: tutorial.category || 'learning', // Default to learning if not specified
         duration: tutorial.duration || null,
         authorId: tutorial.authorId || null,
         createdAt: tutorial.createdAt || new Date()
@@ -263,6 +264,7 @@ export const firebaseDB = {
           videoUrl: tutorial.videoUrl || null,
           websiteUrl: tutorial.websiteUrl || null, 
           thumbnailUrl: tutorial.thumbnailUrl || null,
+          category: tutorial.category || 'learning', // Default to learning if not specified
           createdAt: tutorial.createdAt || new Date(),
           authorId: tutorial.authorId || null
         };
