@@ -10,8 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 import { TutorialWithTags } from '@/types';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useUser } from '@/context/UserContext';
-import { User } from '@shared/schema';
+import { User, Note } from '@shared/schema';
 import { firebaseDB } from '@/lib/firebase';
+import { formatTimeAgo } from '@/lib/utils';
 import { Database } from 'lucide-react';
 
 const Home: React.FC = () => {
@@ -26,7 +27,7 @@ const Home: React.FC = () => {
   });
   
   // Also fetch notes if a user is logged in
-  const { data: notes, isLoading: notesLoading } = useQuery({
+  const { data: notes, isLoading: notesLoading } = useQuery<Note[]>({
     queryKey: ['/api/notes'],
     staleTime: 5000,
     refetchOnMount: 'always',
