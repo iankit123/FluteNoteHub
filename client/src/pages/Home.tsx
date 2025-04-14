@@ -278,7 +278,7 @@ const Home: React.FC = () => {
                     <h2 className="font-poppins font-semibold text-xl text-dark-slate mb-2">No learning materials yet</h2>
                     <p className="text-dark-slate/70 mb-6 max-w-md">Start adding personal notes or save flute tutorials to build your learning library.</p>
                     <div className="flex flex-wrap gap-3 justify-center">
-                      <AddNoteDialog>
+                      <AddNoteDialog initialCategory="learning">
                         <Button variant="default" className="bg-royal-purple text-ivory-white">
                           Add New Content
                         </Button>

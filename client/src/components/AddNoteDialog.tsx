@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
@@ -68,12 +68,14 @@ const textNoteSchema = insertNoteSchema.extend({
 });
 
 type NoteType = 'youtube' | 'website' | 'text';
+type ContentCategory = 'learning' | 'music';
 
 interface AddNoteDialogProps {
   children?: React.ReactNode;
+  initialCategory?: ContentCategory;
 }
 
-const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
+const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children, initialCategory }) => {
   const [open, setOpen] = useState(false);
   const [noteType, setNoteType] = useState<NoteType>('youtube');
   const [, setLocation] = useLocation();
@@ -82,14 +84,27 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
   const queryClient = useQueryClient();
 
   // Get the active tab from the tab selected on the Home page
-  // First check if we're on a specific tab URL (/#good-music)
-  // If not, check if we've passed an initialTab prop
+  // First check if initialCategory was provided via props
+  // Then check if we're on a specific tab URL (/#good-music)
+  // If neither, check if the "Good Music to Hear" tab is active in the DOM
   // Finally default to 'learning'
-  const getActiveTab = () => {
-    // Check if we're viewing the "Good Music to Hear" tab on the home page
-    if (window.location.hash === '#good-music' || document.querySelector('[data-state="active"][value="good-music"]')) {
+  const getActiveTab = (): ContentCategory => {
+    // First priority: use initialCategory prop if provided
+    if (initialCategory) {
+      return initialCategory;
+    }
+    
+    // Second priority: check URL hash
+    if (window.location.hash === '#good-music') {
       return 'music';
     }
+    
+    // Third priority: check DOM for active tab
+    if (document.querySelector('[data-state="active"][value="good-music"]')) {
+      return 'music';
+    }
+    
+    // Default to learning
     return 'learning';
   };
   
@@ -127,6 +142,19 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
       userId: user?.id,
     },
   });
+  
+  // Update form values whenever the dialog opens or activeTab changes
+  useEffect(() => {
+    if (open) {
+      // Update YouTube form with current activeTab
+      youtubeForm.setValue('category', activeTab);
+      
+      // Update website form with current activeTab
+      websiteForm.setValue('category', activeTab);
+      
+      console.log('Form category updated to:', activeTab);
+    }
+  }, [open, activeTab, youtubeForm, websiteForm]);
 
   const tutorialMutation = useMutation({
     mutationFn: async (data: any) => {
