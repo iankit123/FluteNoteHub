@@ -434,9 +434,20 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
                 e.preventDefault();
                 e.stopPropagation();
                 if (window.confirm(`Are you sure you want to delete "${tutorial.title}"?`)) {
+                  // First delete from the server/in-memory storage
                   fetch(`/api/tutorials/${tutorial.id}`, { method: 'DELETE' })
-                    .then(() => {
-                      window.location.reload();
+                    .then(async () => {
+                      try {
+                        // Then delete from Firebase
+                        const { firebaseDB } = await import('@/lib/firebase');
+                        await firebaseDB.deleteTutorial(tutorial.id);
+                        console.log(`Tutorial ${tutorial.id} deleted from Firebase`);
+                      } catch (firebaseErr) {
+                        console.error('Failed to delete tutorial from Firebase:', firebaseErr);
+                      } finally {
+                        // Regardless of Firebase result, reload the page to reflect the in-memory change
+                        window.location.reload();
+                      }
                     })
                     .catch(err => {
                       console.error('Failed to delete tutorial:', err);
