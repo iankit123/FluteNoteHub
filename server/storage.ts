@@ -149,6 +149,16 @@ export class MemStorage implements IStorage {
         // Clear existing tutorials and add Firebase tutorials
         this.tutorials.clear();
         tutorials.forEach(tutorial => {
+          // Migrate: Add category field if missing
+          if (!tutorial.category) {
+            if (tutorial.source === 'youtube') {
+              tutorial.category = 'music';
+            } else {
+              tutorial.category = 'learning';
+            }
+            console.log(`Migrated tutorial ${tutorial.id} "${tutorial.title}" to category: ${tutorial.category}`);
+          }
+          
           this.tutorials.set(tutorial.id, tutorial);
           // Update the current ID counter to prevent ID conflicts
           if (tutorial.id >= this.currentIds.tutorial) {
@@ -262,6 +272,7 @@ export class MemStorage implements IStorage {
         videoUrl: "https://www.youtube.com/watch?v=oV4z-U-AuaY",
         websiteUrl: null,
         source: "youtube",
+        category: "learning", // Explicitly mark as learning content
         authorId: 2, // David Chen
         duration: "12:45"
       },
@@ -272,6 +283,7 @@ export class MemStorage implements IStorage {
         videoUrl: null,
         websiteUrl: "https://flutematters.com/posture-techniques",
         source: "website",
+        category: "learning", // Explicitly mark as learning content
         authorId: 3, // Michelle Taylor
         duration: "20:00"
       },
@@ -282,6 +294,7 @@ export class MemStorage implements IStorage {
         videoUrl: null,
         websiteUrl: null,
         source: "personal",
+        category: "learning", // Explicitly mark as learning content
         authorId: 1, // Emma
         duration: "15:00"
       }
@@ -333,9 +346,21 @@ export class MemStorage implements IStorage {
   async createTutorial(insertTutorial: InsertTutorial): Promise<Tutorial> {
     const id = this.currentIds.tutorial++;
     const now = new Date();
+    
+    // Set default category based on source if not provided
+    let category = insertTutorial.category || null;
+    if (!category) {
+      if (insertTutorial.source === 'youtube') {
+        category = 'music';
+      } else {
+        category = 'learning';
+      }
+    }
+    
     const tutorial: Tutorial = { 
       ...insertTutorial, 
       id, 
+      category,
       createdAt: now
     };
     this.tutorials.set(id, tutorial);
