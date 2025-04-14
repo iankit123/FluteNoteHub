@@ -101,12 +101,23 @@ export const queryClient = new QueryClient({
       queryFn: getQueryFn({ on401: "throw" }),
       refetchInterval: false,
       refetchOnWindowFocus: true,
-      staleTime: 30000, // 30 seconds
+      staleTime: 2000, // 2 seconds
       retry: false,
-      refetchOnMount: true,
+      refetchOnMount: "always",
+      // Make cache invalidation more aggressive
+      gcTime: 10000, // 10 seconds
     },
     mutations: {
       retry: false,
+      // Automatically invalidate relevant queries after mutations
+      onSuccess: (_, variables, context) => {
+        // This will be overridden by specific mutation configs but provides a good default
+        const url = context?.url || '';
+        if (url) {
+          const queryKey = url.split('?')[0]; // Remove query params
+          queryClient.invalidateQueries({ queryKey: [queryKey] });
+        }
+      }
     },
   },
 });

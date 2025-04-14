@@ -22,15 +22,19 @@ const Home: React.FC = () => {
 
   const { data: tutorials, isLoading: tutorialsLoading } = useQuery<TutorialWithTags[]>({
     queryKey: ['/api/tutorials'],
-    staleTime: 5000, // 5 seconds
+    staleTime: 1000, // 1 second
     refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    refetchInterval: 3000, // Refetch every 3 seconds
   });
   
   // Also fetch notes if a user is logged in
   const { data: notes, isLoading: notesLoading } = useQuery<Note[]>({
     queryKey: ['/api/notes'],
-    staleTime: 5000,
+    staleTime: 1000,
     refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    refetchInterval: 3000, // Refetch every 3 seconds
     enabled: !!user, // Only fetch if user is logged in
   });
   
