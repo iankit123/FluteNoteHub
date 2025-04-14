@@ -25,8 +25,8 @@ function App() {
       <Route path="/notes/edit/:id" component={EditNote} />
       <Route path="/notes/new" component={EditNote} />
       <Route path="/notes/:id" component={NoteDetail} />
-      <Route path="/tutorials/:id" component={TutorialDetail} />
       <Route path="/tutorials/new" component={NewTutorial} />
+      <Route path="/tutorials/:id" component={TutorialDetail} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route component={NotFound} />

@@ -163,9 +163,8 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
             {/* Render tutorials */}
             {tutorials && tutorials.map((tutorial) => (
-              <div key={`tutorial-${tutorial.id}`} 
-                   className="cursor-pointer transition-transform hover:scale-[1.01]"
-                   onClick={() => window.location.pathname = `/tutorials/${tutorial.id}`}>
+              <Link key={`tutorial-${tutorial.id}`} href={`/tutorials/${tutorial.id}`}
+                   className="cursor-pointer transition-transform hover:scale-[1.01]">
                 <TutorialCard
                   tutorial={tutorial}
                   onBookmark={(e, tutorial) => {
@@ -179,14 +178,13 @@ const Home: React.FC = () => {
                     handleShare(tutorial);
                   }}
                 />
-              </div>
+              </Link>
             ))}
             
             {/* Render notes */}
             {notes && notes.map((note) => (
-              <div key={`note-${note.id}`}
-                   className="cursor-pointer transition-transform hover:scale-[1.01] bg-white rounded-xl shadow-card overflow-hidden border-l-4 border-turmeric-yellow"
-                   onClick={() => window.location.pathname = `/notes/${note.id}`}>
+              <Link key={`note-${note.id}`} href={`/notes/${note.id}`}
+                  className="cursor-pointer transition-transform hover:scale-[1.01] bg-white rounded-xl shadow-card overflow-hidden border-l-4 border-turmeric-yellow">
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="bg-turmeric-yellow/20 text-turmeric-yellow text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -223,7 +221,7 @@ const Home: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
@@ -237,13 +235,14 @@ const Home: React.FC = () => {
             <h2 className="font-poppins font-semibold text-xl text-dark-slate mb-2">No tutorials yet</h2>
             <p className="text-dark-slate/70 mb-6 max-w-md">Start adding tutorials from YouTube or create your own notes to build your flute learning library.</p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Button 
-                variant="default" 
-                className="bg-royal-purple text-ivory-white"
-                onClick={() => window.location.pathname = '/explore'}
-              >
-                Explore Tutorials
-              </Button>
+              <Link href="/explore">
+                <Button 
+                  variant="default" 
+                  className="bg-royal-purple text-ivory-white"
+                >
+                  Explore Tutorials
+                </Button>
+              </Link>
               <AddNoteDialog>
                 <Button variant="outline" className="border-royal-purple text-royal-purple hover:bg-royal-purple/10">
                   Create Note
