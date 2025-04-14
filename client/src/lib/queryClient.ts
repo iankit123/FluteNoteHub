@@ -7,11 +7,26 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
+// Create a simple cache for GET requests
+const cache: Record<string, { data: any; timestamp: number }> = {};
+const CACHE_DURATION = 3000; // 3 seconds
+
 export async function apiRequest(
   method: string,
   url: string,
   data?: unknown | undefined,
 ): Promise<any> {
+  // Check if we can use cache for GET requests
+  if (method.toUpperCase() === 'GET') {
+    const cacheKey = url;
+    const now = Date.now();
+    const cached = cache[cacheKey];
+    
+    if (cached && now - cached.timestamp < CACHE_DURATION) {
+      return cached.data;
+    }
+  }
+  
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
@@ -21,9 +36,17 @@ export async function apiRequest(
 
   await throwIfResNotOk(res);
   
-  // For GET requests, automatically parse the JSON
+  // For GET requests, automatically parse the JSON and cache it
   if (method.toUpperCase() === 'GET') {
-    return res.json();
+    const responseData = await res.json();
+    
+    // Store in cache
+    cache[url] = {
+      data: responseData,
+      timestamp: Date.now()
+    };
+    
+    return responseData;
   }
   
   // For other methods, try to parse if content exists
@@ -42,7 +65,17 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    const url = queryKey[0] as string;
+    const cacheKey = url;
+    const now = Date.now();
+    const cached = cache[cacheKey];
+    
+    // Use cache if available and fresh
+    if (cached && now - cached.timestamp < CACHE_DURATION) {
+      return cached.data;
+    }
+    
+    const res = await fetch(url, {
       credentials: "include",
     });
 
@@ -51,7 +84,15 @@ export const getQueryFn: <T>(options: {
     }
 
     await throwIfResNotOk(res);
-    return await res.json();
+    const data = await res.json();
+    
+    // Store in cache
+    cache[cacheKey] = {
+      data,
+      timestamp: Date.now()
+    };
+    
+    return data;
   };
 
 export const queryClient = new QueryClient({
@@ -59,9 +100,10 @@ export const queryClient = new QueryClient({
     queries: {
       queryFn: getQueryFn({ on401: "throw" }),
       refetchInterval: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
+      refetchOnWindowFocus: true,
+      staleTime: 30000, // 30 seconds
       retry: false,
+      refetchOnMount: true,
     },
     mutations: {
       retry: false,

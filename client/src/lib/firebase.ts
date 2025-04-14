@@ -20,23 +20,39 @@ const database = getDatabase(app);
 
 // Firebase Database Service
 export const firebaseDB = {
+  // Cache for tutorials
+  _tutorialsCache: null as Tutorial[] | null,
+  _lastFetchTime: 0,
+  
   // Tutorials
   async getAllTutorials(): Promise<Tutorial[]> {
+    // Use cache if it's less than 10 seconds old
+    const now = Date.now();
+    if (this._tutorialsCache && now - this._lastFetchTime < 10000) {
+      return this._tutorialsCache;
+    }
+    
     try {
       const tutorialsRef = ref(database, 'tutorials');
       const snapshot = await get(tutorialsRef);
       
       if (snapshot.exists()) {
         const tutorialsObj = snapshot.val();
-        return Object.keys(tutorialsObj).map(key => ({
+        const tutorials = Object.keys(tutorialsObj).map(key => ({
           id: parseInt(key),
           ...tutorialsObj[key]
         }));
+        
+        // Update cache
+        this._tutorialsCache = tutorials;
+        this._lastFetchTime = now;
+        
+        return tutorials;
       }
       return [];
     } catch (error) {
       console.error("Error fetching tutorials:", error);
-      return [];
+      return this._tutorialsCache || [];
     }
   },
   
