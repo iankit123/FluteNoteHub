@@ -24,6 +24,7 @@ import {
   Palette
 } from 'lucide-react';
 import GradientSelector from './GradientSelector';
+import fluteIcon from '@/assets/flute-icon.png';
 
 const NavigationBar: React.FC = () => {
   const [location] = useLocation();
@@ -85,36 +86,7 @@ const NavigationBar: React.FC = () => {
           <div className="flex items-center flex-shrink-0 mr-6">
             <Link href="/" className="flex items-center">
               <div className="relative flex items-center justify-center bg-white rounded-full h-9 w-9 mr-2 shadow-md">
-                <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path 
-                    d="M4 2L19 17M4 2L4 20M4 20L6 20M7.5 4.5L7.5 17.5M11 7L11 14M14.5 9.5L14.5 12.5M18 12L18 13" 
-                    stroke="url(#gradient)" 
-                    strokeWidth="1.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                  <path 
-                    d="M19 17L21 19.5C21 19.5 20 22 18 21C16 20 19 17 19 17Z" 
-                    stroke="url(#gradient)" 
-                    strokeWidth="1.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                  <path 
-                    d="M19 17L17 19.5C17 19.5 18 22 20 21C22 20 19 17 19 17Z" 
-                    stroke="url(#gradient)" 
-                    strokeWidth="1.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#00D2FF" />
-                      <stop offset="0.5" stopColor="#7366FF" />
-                      <stop offset="1" stopColor="#9C3FED" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <img src={fluteIcon} alt="Flute Icon" className="h-7 w-7" />
               </div>
               <span className="font-poppins font-bold text-xl tracking-tight">FluteNotes</span>
             </Link>
