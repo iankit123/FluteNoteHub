@@ -108,34 +108,44 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
           </div>
           
           {tutorial.websiteUrl && (
-            <div className="mt-3 flex items-center bg-royal-purple/5 p-2 rounded-md hover:bg-royal-purple/10 transition-colors">
-              <div className="w-5 h-5 mr-2 text-royal-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="2" y1="12" x2="22" y2="12"></line>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                </svg>
-              </div>
-              <a 
-                href={tutorial.websiteUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-sm font-medium text-royal-purple hover:underline overflow-hidden text-ellipsis flex-1"
-              >
-                {(() => {
-                  try {
-                    return new URL(tutorial.websiteUrl).hostname;
-                  } catch (e) {
-                    return tutorial.websiteUrl;
-                  }
-                })()}
-              </a>
-              <div className="text-royal-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
+            <div className="mt-3 bg-royal-purple/5 p-3 rounded-md">
+              <div className="flex items-center">
+                <div className="w-5 h-5 mr-2 text-royal-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                </div>
+                <a 
+                  href={tutorial.websiteUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-md font-medium text-royal-purple hover:underline overflow-hidden text-ellipsis flex-1"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {(() => {
+                    try {
+                      const url = new URL(tutorial.websiteUrl);
+                      return url.hostname.replace('www.', '');
+                    } catch (e) {
+                      return tutorial.websiteUrl;
+                    }
+                  })()}
+                </a>
+                <a 
+                  href={tutorial.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-6 h-6 text-royal-purple hover:bg-royal-purple/20 rounded-full transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
               </div>
             </div>
           )}
