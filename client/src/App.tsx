@@ -8,6 +8,7 @@ import Profile from "@/pages/Profile";
 import EditNote from "@/pages/EditNote";
 import NewTutorial from "@/pages/NewTutorial";
 import TutorialDetail from "@/pages/TutorialDetail";
+import NoteDetail from "@/pages/NoteDetail";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Test from "@/pages/Test";
@@ -23,6 +24,7 @@ function App() {
       <Route path="/profile" component={Profile} />
       <Route path="/notes/edit/:id" component={EditNote} />
       <Route path="/notes/new" component={EditNote} />
+      <Route path="/notes/:id" component={NoteDetail} />
       <Route path="/tutorials/:id" component={TutorialDetail} />
       <Route path="/tutorials/new" component={NewTutorial} />
       <Route path="/login" component={Login} />
