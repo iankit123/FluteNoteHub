@@ -1,0 +1,31 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="32" cy="32" r="32" fill="white"/>
+  <path 
+    d="M16 12L46 42M16 12L16 52M16 52L20 52M22.5 17L22.5 47M29 22L29 37M35.5 27L35.5 34M42 32L42 35" 
+    stroke="url(#appGradient)" 
+    strokeWidth="3" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  />
+  <path 
+    d="M46 42L52 48C52 48 49 54 44 51C39 48 46 42 46 42Z" 
+    stroke="url(#appGradient)" 
+    strokeWidth="3" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  />
+  <path 
+    d="M46 42L40 48C40 48 43 54 48 51C53 48 46 42 46 42Z" 
+    stroke="url(#appGradient)" 
+    strokeWidth="3" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  />
+  <defs>
+    <linearGradient id="appGradient" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stopColor="#00D2FF" />
+      <stop offset="0.5" stopColor="#7366FF" />
+      <stop offset="1" stopColor="#9C3FED" />
+    </linearGradient>
+  </defs>
+</svg>

@@ -84,11 +84,38 @@ const NavigationBar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 mr-6">
             <Link href="/" className="flex items-center">
-              <svg viewBox="0 0 24 24" className="h-6 w-6 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 8H17C19 8 20 9 20 11V13C20 15 19 16 17 16H12V8Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 16V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 8C12 5 11 4 8 4H7C4 4 3 5 3 8V16C3 19 4 20 7 20H8C11 20 12 19 12 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <div className="relative flex items-center justify-center bg-white rounded-full h-9 w-9 mr-2 shadow-md">
+                <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path 
+                    d="M4 2L19 17M4 2L4 20M4 20L6 20M7.5 4.5L7.5 17.5M11 7L11 14M14.5 9.5L14.5 12.5M18 12L18 13" 
+                    stroke="url(#gradient)" 
+                    strokeWidth="1.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                  <path 
+                    d="M19 17L21 19.5C21 19.5 20 22 18 21C16 20 19 17 19 17Z" 
+                    stroke="url(#gradient)" 
+                    strokeWidth="1.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                  <path 
+                    d="M19 17L17 19.5C17 19.5 18 22 20 21C22 20 19 17 19 17Z" 
+                    stroke="url(#gradient)" 
+                    strokeWidth="1.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
+                  <defs>
+                    <linearGradient id="gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#00D2FF" />
+                      <stop offset="0.5" stopColor="#7366FF" />
+                      <stop offset="1" stopColor="#9C3FED" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
               <span className="font-poppins font-bold text-xl tracking-tight">FluteNotes</span>
             </Link>
           </div>
@@ -109,20 +136,6 @@ const NavigationBar: React.FC = () => {
           
           {/* Main Navigation */}
           <div className="flex items-center">
-            <div className="block md:hidden mr-2">
-              <button 
-                onClick={toggleMobileMenu}
-                className="flex items-center text-ivory-white hover:opacity-80"
-              >
-                <Menu className="h-6 w-6" />
-              </button>
-              <button 
-                onClick={toggleMobileSearch}
-                className="flex items-center text-ivory-white hover:opacity-80 ml-2"
-              >
-                <Search className="h-6 w-6" />
-              </button>
-            </div>
             
             <div className="hidden md:flex items-center space-x-6">
               {navItems.map((item) => (
@@ -196,83 +209,7 @@ const NavigationBar: React.FC = () => {
             </div>
           </div>
         </div>
-        
-        {/* Mobile Search (Slide Down) */}
-        {mobileSearchOpen && (
-          <div className="md:hidden px-4 pb-3">
-            <div className="relative rounded-full overflow-hidden bg-white/30 focus-within:shadow-glow transition-shadow duration-300">
-              <input 
-                type="text" 
-                placeholder="Search..." 
-                className="w-full py-2 pl-4 pr-10 text-dark-slate bg-transparent outline-none" 
-              />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-deep-teal">
-                <Search className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        )}
-        
-        {/* Mobile Menu (Slide Down) */}
-        {mobileMenuOpen && (
-          <div className="md:hidden px-4 pb-3 bg-royal-purple/90">
-            <div className="flex flex-col space-y-2">
-              {navItems.map((item) => (
-                <Link 
-                  key={item.name} 
-                  href={item.href}
-                  className={`font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center ${isActive(item.href) ? 'text-turmeric-yellow' : ''}`} 
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {React.cloneElement(item.icon as React.ReactElement, { className: "h-5 w-5 mr-2" })}
-                  {item.name}
-                </Link>
-              ))}
-              
-              {isAuthenticated ? (
-                <>
-                  <Link 
-                    href="/profile" 
-                    className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" 
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <User className="h-5 w-5 mr-2" />
-                    Profile
-                  </Link>
-                  <button 
-                    className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" 
-                    onClick={() => {
-                      setShowGradientSelector(true);
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    <Palette className="h-5 w-5 mr-2" />
-                    Change Colors
-                  </button>
-                  <button 
-                    className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" 
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    <LogOut className="h-5 w-5 mr-2" />
-                    Log out
-                  </button>
-                </>
-              ) : (
-                <Link 
-                  href="/login"
-                  className="font-medium py-2 hover:text-turmeric-yellow transition-colors flex items-center" 
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <User className="h-5 w-5 mr-2" />
-                  Log in
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
+
       </nav>
       
       {/* Mobile Navigation Footer */}
