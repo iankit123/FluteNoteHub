@@ -57,7 +57,7 @@ const youtubeSchema = insertTutorialSchema.extend({
 const websiteSchema = insertTutorialSchema.extend({
   websiteUrl: z.string().url('Please enter a valid URL'),
   title: z.string().min(3, 'Title must be at least 3 characters'),
-  source: z.literal('external'),
+  source: z.literal('website'),
   description: z.string().optional(),
 });
 
@@ -97,7 +97,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
       title: '',
       description: '',
       websiteUrl: '',
-      source: 'external',
+      source: 'website',
       authorId: user?.id,
     },
   });
