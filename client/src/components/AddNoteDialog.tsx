@@ -81,6 +81,9 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  // Get the active tab from URL or default to 'learning'
+  const activeTab = window.location.hash === '#good-music' ? 'music' : 'learning';
+
   const youtubeForm = useForm<z.infer<typeof youtubeSchema>>({
     resolver: zodResolver(youtubeSchema),
     defaultValues: {
@@ -88,6 +91,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
       description: '',
       videoUrl: '',
       source: 'youtube',
+      category: activeTab, // Set category based on active tab
       authorId: user?.id,
     },
   });

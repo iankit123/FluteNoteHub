@@ -198,9 +198,9 @@ const Home: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-                {/* Render website and educational tutorials */}
+                {/* Render learning content (not music) */}
                 {tutorials && tutorials
-                  .filter(tutorial => tutorial.source !== 'youtube' || !tutorial.title.toLowerCase().includes('music'))
+                  .filter(tutorial => tutorial.category === 'learning' || tutorial.category === undefined)
                   .map((tutorial) => (
                     <Link key={`tutorial-${tutorial.id}`} href={`/tutorials/${tutorial.id}`}
                          className="cursor-pointer transition-transform hover:scale-[1.01]">
@@ -272,7 +272,7 @@ const Home: React.FC = () => {
 
                 {/* Empty state for Notes to Learn tab */}
                 {(!notes || notes.length === 0) && 
-                 (!tutorials || tutorials.filter(t => t.source !== 'youtube' || !t.title.toLowerCase().includes('music')).length === 0) && (
+                 (!tutorials || tutorials.filter(t => t.category === 'learning' || t.category === undefined).length === 0) && (
                   <div className="col-span-3 flex flex-col items-center justify-center bg-white/70 rounded-xl shadow-sm p-10 text-center mb-24">
                     <BookOpen className="h-16 w-16 text-royal-purple/30 mb-4" />
                     <h2 className="font-poppins font-semibold text-xl text-dark-slate mb-2">No learning materials yet</h2>
@@ -314,9 +314,9 @@ const Home: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-                {/* Only render YouTube videos for music section */}
+                {/* Only render music content */}
                 {tutorials && tutorials
-                  .filter(tutorial => tutorial.source === 'youtube')
+                  .filter(tutorial => tutorial.category === 'music')
                   .map((tutorial) => (
                     <Link key={`tutorial-${tutorial.id}`} href={`/tutorials/${tutorial.id}`}
                          className="cursor-pointer transition-transform hover:scale-[1.01]">
@@ -337,7 +337,7 @@ const Home: React.FC = () => {
                 ))}
 
                 {/* Empty state for Good Music to Hear tab */}
-                {(!tutorials || tutorials.filter(t => t.source === 'youtube').length === 0) && (
+                {(!tutorials || tutorials.filter(t => t.category === 'music').length === 0) && (
                   <div className="col-span-3 flex flex-col items-center justify-center bg-white/70 rounded-xl shadow-sm p-10 text-center mb-24">
                     <Music className="h-16 w-16 text-royal-purple/30 mb-4" />
                     <h2 className="font-poppins font-semibold text-xl text-dark-slate mb-2">No music added yet</h2>

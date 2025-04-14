@@ -29,6 +29,7 @@ export const tutorials = pgTable("tutorials", {
   videoUrl: text("video_url"),
   websiteUrl: text("website_url"),
   source: text("source").default("youtube"), // youtube, personal, website, community
+  category: text("category").default("learning"), // "learning" or "music"
   authorId: integer("author_id").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
   duration: text("duration"), // e.g. "12:45"
@@ -41,6 +42,7 @@ export const insertTutorialSchema = createInsertSchema(tutorials).pick({
   videoUrl: true,
   websiteUrl: true,
   source: true,
+  category: true,
   authorId: true,
   duration: true,
 });
