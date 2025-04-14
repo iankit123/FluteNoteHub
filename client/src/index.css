@@ -76,8 +76,29 @@
     @apply bg-white/70 backdrop-blur-lg border border-white/20;
   }
   
+  /* Navigation gradient options */
   .nav-gradient {
-    @apply bg-gradient-to-r from-royal-purple to-deep-teal;
+    @apply bg-gradient-to-r from-royal-purple to-[#9747FF];
+  }
+  
+  .nav-gradient-option1 {
+    @apply bg-gradient-to-r from-royal-purple to-[#9747FF];
+  }
+  
+  .nav-gradient-option2 {
+    @apply bg-gradient-to-r from-royal-purple via-[#8A4BD9] to-[#9747FF];
+  }
+  
+  .nav-gradient-option3 {
+    @apply bg-gradient-to-r from-royal-purple to-turmeric-yellow;
+  }
+  
+  .nav-gradient-option4 {
+    @apply bg-gradient-to-r from-[#5B34AA] to-royal-purple;
+  }
+  
+  .nav-gradient-option5 {
+    @apply bg-gradient-to-r from-[#4A2D91] via-royal-purple to-[#9747FF];
   }
   
   .gradient-border {
