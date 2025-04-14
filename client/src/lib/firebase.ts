@@ -204,39 +204,46 @@ export const firebaseDB = {
   // Sync data from in-memory to Firebase
   async syncMemoryToFirebase(tutorials: Tutorial[], tags: Tag[]): Promise<void> {
     try {
-      // Clear existing data (optional - comment out if you want to preserve existing data)
-      await set(ref(database, 'tutorials'), null);
-      await set(ref(database, 'tags'), null);
+      console.log("Starting Firebase sync with", tutorials.length, "tutorials");
+      
+      // We won't clear existing data anymore to ensure we don't lose data
+      // Instead we'll update the tutorials and tags
       
       // Add tutorials
-      const tutorialsObj: Record<number, Omit<Tutorial, 'id'>> = {};
+      const tutorialsObj: Record<string, Omit<Tutorial, 'id'>> = {};
       tutorials.forEach(tutorial => {
-        tutorialsObj[tutorial.id] = {
+        tutorialsObj[tutorial.id.toString()] = {
           title: tutorial.title,
-          description: tutorial.description,
-          source: tutorial.source,
-          duration: tutorial.duration,
-          videoUrl: tutorial.videoUrl,
-          websiteUrl: tutorial.websiteUrl,
-          thumbnailUrl: tutorial.thumbnailUrl,
-          createdAt: tutorial.createdAt,
-          authorId: tutorial.authorId
+          description: tutorial.description || null,
+          source: tutorial.source || null,
+          duration: tutorial.duration || null,
+          videoUrl: tutorial.videoUrl || null,
+          websiteUrl: tutorial.websiteUrl || null, 
+          thumbnailUrl: tutorial.thumbnailUrl || null,
+          createdAt: tutorial.createdAt || new Date(),
+          authorId: tutorial.authorId || null
         };
       });
       
+      // Write tutorials to Firebase
       await set(ref(database, 'tutorials'), tutorialsObj);
       
       // Add tags
-      const tagsObj: Record<number, Omit<Tag, 'id'>> = {};
+      const tagsObj: Record<string, Omit<Tag, 'id'>> = {};
       tags.forEach(tag => {
-        tagsObj[tag.id] = {
+        tagsObj[tag.id.toString()] = {
           name: tag.name,
-          color: tag.color,
+          color: tag.color || null,
           category: tag.category
         };
       });
       
+      // Write tags to Firebase
       await set(ref(database, 'tags'), tagsObj);
+      
+      // Invalidate cache to ensure fresh data on next fetch
+      this._tutorialsCache = null;
+      this._lastFetchTime = 0;
       
       console.log("Data successfully synced to Firebase");
     } catch (error) {

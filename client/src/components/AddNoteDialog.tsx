@@ -116,17 +116,29 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
     mutationFn: async (data: any) => {
       return await apiRequest('POST', '/api/tutorials', data);
     },
-    onSuccess: async () => {
+    onSuccess: async (newTutorial) => {
+      console.log("Tutorial added successfully:", newTutorial);
+      
       // First invalidate the tutorials query to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
       
       // Then sync the data to Firebase
       try {
         // Fetch latest data
+        console.log("Fetching tutorials for Firebase sync...");
         const tutorials = await apiRequest('GET', '/api/tutorials');
+        console.log("Received tutorials for sync:", tutorials);
+        
         const tags = await apiRequest('GET', '/api/tags');
+        console.log("Received tags for sync:", tags);
         
         // Sync to Firebase
+        console.log("Starting Firebase sync with", 
+          Array.isArray(tutorials) ? tutorials.length : 0, 
+          "tutorials and", 
+          Array.isArray(tags) ? tags.length : 0, 
+          "tags");
+          
         await firebaseDB.syncMemoryToFirebase(
           Array.isArray(tutorials) ? tutorials : [],
           Array.isArray(tags) ? tags : []
@@ -158,17 +170,29 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
     mutationFn: async (data: any) => {
       return await apiRequest('POST', '/api/notes', data);
     },
-    onSuccess: async () => {
+    onSuccess: async (newNote) => {
+      console.log("Note added successfully:", newNote);
+      
       // First invalidate the notes query to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['/api/notes'] });
       
       // Then sync the data to Firebase
       try {
         // Fetch latest data
+        console.log("Fetching tutorials for Firebase sync...");
         const tutorials = await apiRequest('GET', '/api/tutorials');
+        console.log("Received tutorials for sync:", tutorials);
+        
         const tags = await apiRequest('GET', '/api/tags');
+        console.log("Received tags for sync:", tags);
         
         // Sync to Firebase
+        console.log("Starting Firebase sync with", 
+          Array.isArray(tutorials) ? tutorials.length : 0, 
+          "tutorials and", 
+          Array.isArray(tags) ? tags.length : 0, 
+          "tags");
+          
         await firebaseDB.syncMemoryToFirebase(
           Array.isArray(tutorials) ? tutorials : [],
           Array.isArray(tags) ? tags : []
