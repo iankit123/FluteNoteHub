@@ -96,7 +96,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
     defaultValues: {
       title: '',
       description: '',
-      videoUrl: '',
+      websiteUrl: '',
       source: 'external',
       authorId: user?.id,
     },

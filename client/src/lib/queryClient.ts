@@ -32,7 +32,8 @@ export async function apiRequest(
     return res.json();
   }
   
-  return res;
+  // Return empty object for success cases with no content
+  return {};
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
