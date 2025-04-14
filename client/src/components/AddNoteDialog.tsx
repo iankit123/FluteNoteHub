@@ -55,7 +55,7 @@ const youtubeSchema = insertTutorialSchema.extend({
 });
 
 const websiteSchema = insertTutorialSchema.extend({
-  videoUrl: z.string().url('Please enter a valid URL'),
+  websiteUrl: z.string().url('Please enter a valid URL'),
   title: z.string().min(3, 'Title must be at least 3 characters'),
   source: z.literal('external'),
   description: z.string().optional(),
@@ -113,8 +113,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
 
   const tutorialMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await apiRequest('POST', '/api/tutorials', data);
-      return await res.json();
+      return await apiRequest('POST', '/api/tutorials', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
@@ -136,8 +135,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
 
   const noteMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await apiRequest('POST', '/api/notes', data);
-      return await res.json();
+      return await apiRequest('POST', '/api/notes', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/notes'] });
@@ -305,7 +303,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
               <form onSubmit={websiteForm.handleSubmit(onWebsiteSubmit)} className="space-y-4">
                 <FormField
                   control={websiteForm.control}
-                  name="videoUrl"
+                  name="websiteUrl"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Website URL</FormLabel>
