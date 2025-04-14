@@ -19,7 +19,8 @@ import {
   LogOut, 
   Menu, 
   Search,
-  Settings
+  Settings,
+  Clock
 } from 'lucide-react';
 
 const NavigationBar: React.FC = () => {
@@ -42,6 +43,7 @@ const NavigationBar: React.FC = () => {
     { name: 'Home', icon: <Home className="h-4 w-4 mr-1" />, href: '/' },
     { name: 'Explore', icon: <Compass className="h-4 w-4 mr-1" />, href: '/explore' },
     { name: 'Discussions', icon: <MessageSquare className="h-4 w-4 mr-1" />, href: '/community' },
+    { name: 'Metronome', icon: <Clock className="h-4 w-4 mr-1" />, href: '/metronome' },
   ];
 
   const isActive = (path: string) => {

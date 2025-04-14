@@ -47,6 +47,7 @@ const Login: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsSubmitting(true);
+      console.log("Attempting login with:", values.username);
       await login(values.username, values.password);
       toast({
         title: "Login Successful",
@@ -54,6 +55,7 @@ const Login: React.FC = () => {
       });
       navigate('/');
     } catch (error) {
+      console.error("Login error:", error);
       toast({
         title: "Login Failed",
         description: "Invalid username or password. Please try again.",

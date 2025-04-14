@@ -16,6 +16,8 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<any> {
+  console.log(`API Request: ${method} ${url}`, data);
+  
   // Check if we can use cache for GET requests
   if (method.toUpperCase() === 'GET') {
     const cacheKey = url;
@@ -27,36 +29,46 @@ export async function apiRequest(
     }
   }
   
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: data ? { "Content-Type": "application/json" } : {},
+      body: data ? JSON.stringify(data) : undefined,
+      credentials: "include",
+    });
 
-  await throwIfResNotOk(res);
-  
-  // For GET requests, automatically parse the JSON and cache it
-  if (method.toUpperCase() === 'GET') {
-    const responseData = await res.json();
+    if (!res.ok) {
+      console.error(`API error ${res.status}: ${res.statusText}`);
+      const errorText = await res.text();
+      console.error(`Error details: ${errorText}`);
+      throw new Error(`${res.status}: ${res.statusText} - ${errorText}`);
+    }
     
-    // Store in cache
-    cache[url] = {
-      data: responseData,
-      timestamp: Date.now()
-    };
+    // For GET requests, automatically parse the JSON and cache it
+    if (method.toUpperCase() === 'GET') {
+      const responseData = await res.json();
+      
+      // Store in cache
+      cache[url] = {
+        data: responseData,
+        timestamp: Date.now()
+      };
+      
+      return responseData;
+    }
     
-    return responseData;
+    // For other methods, try to parse if content exists
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('application/json') && res.status !== 204) {
+      return res.json();
+    }
+    
+    // Return the response for further processing
+    return res;
+  } catch (error) {
+    console.error("API request error:", error);
+    throw error;
   }
-  
-  // For other methods, try to parse if content exists
-  const contentType = res.headers.get('content-type');
-  if (contentType && contentType.includes('application/json') && res.status !== 204) {
-    return res.json();
-  }
-  
-  // Return empty object for success cases with no content
-  return {};
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
