@@ -46,8 +46,23 @@ const NoteDetail: React.FC = () => {
     },
   });
   
-  const handleDelete = () => {
-    deleteMutation.mutate();
+  const handleDelete = async () => {
+    try {
+      // First, delete from the server/in-memory storage through the mutation
+      deleteMutation.mutate();
+      
+      // Also delete from Firebase
+      const { firebaseDB } = await import('@/lib/firebase');
+      const success = await firebaseDB.deleteNote(noteId);
+      
+      if (success) {
+        console.log(`Note ${noteId} successfully deleted from Firebase`);
+      } else {
+        console.error(`Failed to delete note ${noteId} from Firebase`);
+      }
+    } catch (error) {
+      console.error('Error during deletion process:', error);
+    }
   };
   
   const handleEdit = () => {

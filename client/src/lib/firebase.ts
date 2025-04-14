@@ -201,6 +201,19 @@ export const firebaseDB = {
     }
   },
 
+  // Notes
+  async deleteNote(id: number): Promise<boolean> {
+    try {
+      await remove(ref(database, `notes/${id}`));
+      // Also remove related comments
+      await remove(ref(database, `noteComments/${id}`));
+      return true;
+    } catch (error) {
+      console.error(`Error deleting note ${id} from Firebase:`, error);
+      return false;
+    }
+  },
+  
   // Sync data from in-memory to Firebase
   async syncMemoryToFirebase(tutorials: Tutorial[], tags: Tag[]): Promise<void> {
     try {
