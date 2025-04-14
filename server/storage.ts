@@ -129,7 +129,71 @@ export class MemStorage implements IStorage {
       communityComment: 1,
     };
     
+    // First seed with default data
     this.seedData();
+    
+    // Then try to load data from Firebase (will happen asynchronously)
+    this.loadFromFirebase();
+  }
+  
+  // Load data from Firebase and populate MemStorage
+  private async loadFromFirebase() {
+    try {
+      const { firebaseDB } = await import('@/lib/firebase');
+      
+      // Load tutorials from Firebase
+      const tutorials = await firebaseDB.getAllTutorials();
+      if (tutorials && tutorials.length > 0) {
+        console.log(`Loaded ${tutorials.length} tutorials from Firebase`);
+        
+        // Clear existing tutorials and add Firebase tutorials
+        this.tutorials.clear();
+        tutorials.forEach(tutorial => {
+          this.tutorials.set(tutorial.id, tutorial);
+          // Update the current ID counter to prevent ID conflicts
+          if (tutorial.id >= this.currentIds.tutorial) {
+            this.currentIds.tutorial = tutorial.id + 1;
+          }
+        });
+      }
+      
+      // Load tags
+      const tags = await firebaseDB.getAllTags();
+      if (tags && tags.length > 0) {
+        console.log(`Loaded ${tags.length} tags from Firebase`);
+        
+        // Clear existing tags and add Firebase tags
+        this.tags.clear();
+        tags.forEach(tag => {
+          this.tags.set(tag.id, tag);
+          // Update the current ID counter to prevent ID conflicts
+          if (tag.id >= this.currentIds.tag) {
+            this.currentIds.tag = tag.id + 1;
+          }
+        });
+      }
+      
+      // Load notes from Firebase
+      const notes = await firebaseDB.getAllNotes();
+      if (notes && notes.length > 0) {
+        console.log(`Loaded ${notes.length} notes from Firebase`);
+        
+        // Clear existing notes and add Firebase notes
+        this.notes.clear();
+        notes.forEach(note => {
+          this.notes.set(note.id, note);
+          // Update the current ID counter to prevent ID conflicts
+          if (note.id >= this.currentIds.note) {
+            this.currentIds.note = note.id + 1;
+          }
+        });
+      }
+      
+      console.log('Successfully loaded data from Firebase');
+    } catch (error) {
+      console.error('Error loading data from Firebase:', error);
+      console.log('Using seed data as fallback');
+    }
   }
 
   // Seed initial data

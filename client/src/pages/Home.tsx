@@ -368,15 +368,18 @@ const Home: React.FC = () => {
                   // Fetch all data from memory storage
                   const tutorials = await apiRequest('GET', '/api/tutorials');
                   const tags = await apiRequest('GET', '/api/tags');
+                  const notes = await apiRequest('GET', '/api/notes');
                   
                   // Sync to Firebase
                   await firebaseDB.syncMemoryToFirebase(
                     Array.isArray(tutorials) ? tutorials : [],
-                    Array.isArray(tags) ? tags : []
+                    Array.isArray(tags) ? tags : [],
+                    Array.isArray(notes) ? notes : []
                   );
                   
                   // Refresh data
                   await queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
+                  await queryClient.invalidateQueries({ queryKey: ['/api/notes'] });
                   
                   toast({
                     title: "Sync Complete",

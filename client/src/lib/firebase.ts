@@ -20,8 +20,9 @@ const database = getDatabase(app);
 
 // Firebase Database Service
 export const firebaseDB = {
-  // Cache for tutorials
+  // Cache for data
   _tutorialsCache: null as Tutorial[] | null,
+  _notesCache: null as Note[] | null,
   _lastFetchTime: 0,
   
   // Tutorials
@@ -53,6 +54,31 @@ export const firebaseDB = {
     } catch (error) {
       console.error("Error fetching tutorials:", error);
       return this._tutorialsCache || [];
+    }
+  },
+  
+  // Notes
+  async getAllNotes(): Promise<Note[]> {
+    try {
+      const notesRef = ref(database, 'notes');
+      const snapshot = await get(notesRef);
+      
+      if (snapshot.exists()) {
+        const notesObj = snapshot.val();
+        const notes = Object.keys(notesObj).map(key => ({
+          id: parseInt(key),
+          ...notesObj[key]
+        }));
+        
+        // Update cache
+        this._notesCache = notes;
+        
+        return notes;
+      }
+      return [];
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+      return this._notesCache || [];
     }
   },
   
@@ -219,12 +245,12 @@ export const firebaseDB = {
   },
   
   // Sync data from in-memory to Firebase
-  async syncMemoryToFirebase(tutorials: Tutorial[], tags: Tag[]): Promise<void> {
+  async syncMemoryToFirebase(tutorials: Tutorial[], tags: Tag[], notes: Note[] = []): Promise<void> {
     try {
-      console.log("Starting Firebase sync with", tutorials.length, "tutorials");
+      console.log("Starting Firebase sync with", tutorials.length, "tutorials and", notes.length, "notes");
       
       // We won't clear existing data anymore to ensure we don't lose data
-      // Instead we'll update the tutorials and tags
+      // Instead we'll update the tutorials, tags, and notes
       
       // Add tutorials
       const tutorialsObj: Record<string, Omit<Tutorial, 'id'>> = {};
@@ -258,8 +284,27 @@ export const firebaseDB = {
       // Write tags to Firebase
       await set(ref(database, 'tags'), tagsObj);
       
+      // Add notes if provided
+      if (notes && notes.length > 0) {
+        const notesObj: Record<string, Omit<Note, 'id'>> = {};
+        notes.forEach(note => {
+          notesObj[note.id.toString()] = {
+            title: note.title,
+            content: note.content,
+            tutorialId: note.tutorialId || null,
+            userId: note.userId || null,
+            createdAt: note.createdAt || new Date(),
+            updatedAt: note.updatedAt || new Date()
+          };
+        });
+        
+        // Write notes to Firebase
+        await set(ref(database, 'notes'), notesObj);
+      }
+      
       // Invalidate cache to ensure fresh data on next fetch
       this._tutorialsCache = null;
+      this._notesCache = null;
       this._lastFetchTime = 0;
       
       console.log("Data successfully synced to Firebase");
