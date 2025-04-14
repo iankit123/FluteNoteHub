@@ -115,8 +115,28 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
     mutationFn: async (data: any) => {
       return await apiRequest('POST', '/api/tutorials', data);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // First invalidate the tutorials query to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['/api/tutorials'] });
+      
+      // Then sync the data to Firebase
+      try {
+        // Fetch latest data
+        const tutorials = await apiRequest('GET', '/api/tutorials');
+        const tags = await apiRequest('GET', '/api/tags');
+        
+        // Sync to Firebase
+        await firebaseDB.syncMemoryToFirebase(
+          Array.isArray(tutorials) ? tutorials : [],
+          Array.isArray(tags) ? tags : []
+        );
+        
+        console.log("Auto-sync to Firebase complete after adding tutorial");
+      } catch (syncError) {
+        console.error("Error syncing to Firebase:", syncError);
+        // Don't show an error toast since this is automatic in the background
+      }
+      
       toast({
         title: 'Success',
         description: 'Your tutorial has been added!',
@@ -137,8 +157,28 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
     mutationFn: async (data: any) => {
       return await apiRequest('POST', '/api/notes', data);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // First invalidate the notes query to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['/api/notes'] });
+      
+      // Then sync the data to Firebase
+      try {
+        // Fetch latest data
+        const tutorials = await apiRequest('GET', '/api/tutorials');
+        const tags = await apiRequest('GET', '/api/tags');
+        
+        // Sync to Firebase
+        await firebaseDB.syncMemoryToFirebase(
+          Array.isArray(tutorials) ? tutorials : [],
+          Array.isArray(tags) ? tags : []
+        );
+        
+        console.log("Auto-sync to Firebase complete after adding note");
+      } catch (syncError) {
+        console.error("Error syncing to Firebase:", syncError);
+        // Don't show an error toast since this is automatic in the background
+      }
+      
       toast({
         title: 'Success',
         description: 'Your note has been added!',
