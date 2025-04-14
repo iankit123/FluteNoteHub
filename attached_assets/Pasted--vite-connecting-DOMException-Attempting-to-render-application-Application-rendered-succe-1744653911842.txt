@@ -1,0 +1,42 @@
+[vite] connecting...
+DOMException {}
+
+Attempting to render application...
+Application rendered successfully.
+Warning: validateDOMNesting(...): <a> cannot appear as a descendant of &lt;a&gt;.
+    at a
+    at div
+    at div
+    at div
+    at div
+    at TutorialCard (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/components/TutorialCard.tsx?t=1744653627587:37:3)
+    at a
+    at https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:337:18
+    at div
+    at main
+    at Home (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/Home.tsx?t=1744653757809:34:20)
+    at Route (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:323:16)
+    at Switch (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:379:17)
+    at App
+    at QueryClientProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=b0905a65:2805:3)
+    at UserProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/context/UserContext.tsx:21:32)
+at a
+at div
+at div
+at div
+at div
+at TutorialCard (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/components/TutorialCard.tsx?t=1744653627587:37:3)
+at a
+at https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:337:18
+at div
+at main
+at Home (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/Home.tsx?t=1744653757809:34:20)
+at Route (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:323:16)
+at Switch (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:379:17)
+at App
+at QueryClientProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=b0905a65:2805:3)
+at UserProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/context/UserContext.tsx:21:32)
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
