@@ -81,8 +81,19 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Get the active tab from URL or default to 'learning'
-  const activeTab = window.location.hash === '#good-music' ? 'music' : 'learning';
+  // Get the active tab from the tab selected on the Home page
+  // First check if we're on a specific tab URL (/#good-music)
+  // If not, check if we've passed an initialTab prop
+  // Finally default to 'learning'
+  const getActiveTab = () => {
+    // Check if we're viewing the "Good Music to Hear" tab on the home page
+    if (window.location.hash === '#good-music' || document.querySelector('[data-state="active"][value="good-music"]')) {
+      return 'music';
+    }
+    return 'learning';
+  };
+  
+  const activeTab = getActiveTab();
 
   const youtubeForm = useForm<z.infer<typeof youtubeSchema>>({
     resolver: zodResolver(youtubeSchema),
@@ -252,26 +263,39 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
-          <DialogTitle>Add New Content</DialogTitle>
+          <DialogTitle>
+            {activeTab === 'music' ? 'Add New Music' : 'Add Learning Content'}
+          </DialogTitle>
           <DialogDescription>
-            Save tutorials, links, or create your own notes.
+            {activeTab === 'music' 
+              ? 'Add your favorite flute music performances to listen to and get inspired.'
+              : 'Save tutorials, links, or create your own learning notes.'}
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="youtube" className="mt-4" onValueChange={(v) => setNoteType(v as NoteType)}>
           <TabsList className="grid grid-cols-3 w-full">
             <TabsTrigger value="youtube" className="flex items-center gap-1">
-              <Video className="h-4 w-4" />
-              <span>YouTube</span>
+              {activeTab === 'music' ? <Music className="h-4 w-4" /> : <Video className="h-4 w-4" />}
+              <span>{activeTab === 'music' ? 'YouTube Music' : 'YouTube'}</span>
             </TabsTrigger>
-            <TabsTrigger value="website" className="flex items-center gap-1">
-              <LinkIcon className="h-4 w-4" />
-              <span>Website</span>
-            </TabsTrigger>
-            <TabsTrigger value="text" className="flex items-center gap-1">
-              <FileText className="h-4 w-4" />
-              <span>Text Note</span>
-            </TabsTrigger>
+            {activeTab !== 'music' && (
+              <TabsTrigger value="website" className="flex items-center gap-1">
+                <LinkIcon className="h-4 w-4" />
+                <span>Website</span>
+              </TabsTrigger>
+            )}
+            {activeTab !== 'music' && (
+              <TabsTrigger value="text" className="flex items-center gap-1">
+                <FileText className="h-4 w-4" />
+                <span>Text Note</span>
+              </TabsTrigger>
+            )}
+            {activeTab === 'music' && (
+              <div className="col-span-2 flex items-center justify-center text-xs text-gray-500">
+                For music collection, we only support YouTube videos
+              </div>
+            )}
           </TabsList>
 
           <TabsContent value="youtube" className="mt-4">
@@ -321,7 +345,7 @@ const AddNoteDialog: React.FC<AddNoteDialogProps> = ({ children }) => {
                 />
                 <DialogFooter>
                   <Button type="submit" className="bg-royal-purple text-white">
-                    {tutorialMutation.isPending ? 'Adding...' : 'Add Tutorial'}
+                    {tutorialMutation.isPending ? 'Adding...' : activeTab === 'music' ? 'Add Music' : 'Add Tutorial'}
                   </Button>
                 </DialogFooter>
               </form>
