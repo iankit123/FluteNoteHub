@@ -1,0 +1,43 @@
+The above error occurred in the <MyLibrary> component:
+
+    at MyLibrary (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/MyLibrary.tsx:32:20)
+    at Route (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:323:16)
+    at Switch (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:379:17)
+    at App
+    at QueryClientProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=b0905a65:2805:3)
+    at UserProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/context/UserContext.tsx:21:32)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+at MyLibrary (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/MyLibrary.tsx:32:20)
+at Route (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:323:16)
+at Switch (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:379:17)
+at App
+at QueryClientProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=b0905a65:2805:3)
+at UserProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/context/UserContext.tsx:21:32)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+Cannot read properties of undefined (reading 'tags')
+at https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/MyLibrary.tsx:278:41
+at Array.map (<anonymous>)
+at MyLibrary (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/MyLibrary.tsx:269:270)
+at renderWithHooks (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=b0905a65:11548:26)
+at updateFunctionComponent (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=b0905a65:14582:28)
+at beginWork (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=b0905a65:15924:22)
+at beginWork$1 (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=b0905a65:19753:22)
+at performUnitOfWork (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=b0905a65:19198:20)
+at workLoopSync (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=b0905a65:19137:13)
+at renderRootSync (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RPCDYKBN.js?v=b0905a65:19116:15)
+Global error caught: 
+TypeError {}
+
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400

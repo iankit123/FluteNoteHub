@@ -27,7 +27,11 @@ const MyLibrary: React.FC = () => {
     enabled: !!user,
   });
 
-  const handleBookmark = async (tutorial: TutorialWithTags) => {
+  const handleBookmark = async (event: React.MouseEvent, tutorial: TutorialWithTags) => {
+    if (event) {
+      event.preventDefault();
+    }
+    
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -68,7 +72,11 @@ const MyLibrary: React.FC = () => {
     }
   };
 
-  const handleShare = (tutorial: TutorialWithTags) => {
+  const handleShare = (event: React.MouseEvent, tutorial: TutorialWithTags) => {
+    if (event) {
+      event.preventDefault();
+    }
+    
     if (navigator.share) {
       navigator.share({
         title: tutorial.title,
@@ -168,18 +176,26 @@ const MyLibrary: React.FC = () => {
               </div>
             ) : bookmarks && bookmarks.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {bookmarks.map((bookmark) => (
-                  <TutorialCard
-                    key={bookmark.id}
-                    tutorial={{
-                      ...bookmark.tutorial,
-                      isBookmarked: true,
-                      tags: bookmark.tutorial.tags
-                    }}
-                    onBookmark={handleBookmark}
-                    onShare={handleShare}
-                  />
-                ))}
+                {bookmarks.map((bookmark) => {
+                  // Add a safety check to ensure bookmark.tutorial exists
+                  if (!bookmark.tutorial) {
+                    console.warn('Found bookmark without tutorial data:', bookmark);
+                    return null;
+                  }
+                  
+                  return (
+                    <TutorialCard
+                      key={bookmark.id}
+                      tutorial={{
+                        ...bookmark.tutorial,
+                        isBookmarked: true,
+                        tags: bookmark.tutorial?.tags || []
+                      }}
+                      onBookmark={handleBookmark}
+                      onShare={handleShare}
+                    />
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center bg-white/70 rounded-xl shadow-sm p-10 text-center">
@@ -220,18 +236,26 @@ const MyLibrary: React.FC = () => {
               </div>
             ) : notes && notes.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {notes.map((note) => (
-                  <TutorialCard
-                    key={note.id}
-                    tutorial={{
-                      ...note,
-                      source: 'personal',
-                      tags: note.tags || []
-                    }}
-                    onBookmark={handleBookmark}
-                    onShare={handleShare}
-                  />
-                ))}
+                {notes.map((note) => {
+                  // Add a safety check to ensure note exists
+                  if (!note) {
+                    console.warn('Found null note in notes array');
+                    return null;
+                  }
+                  
+                  return (
+                    <TutorialCard
+                      key={note.id}
+                      tutorial={{
+                        ...note,
+                        source: 'personal',
+                        tags: note.tags || []
+                      }}
+                      onBookmark={handleBookmark}
+                      onShare={handleShare}
+                    />
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center bg-white/70 rounded-xl shadow-sm p-10 text-center">

@@ -1,0 +1,41 @@
+[vite] connecting...
+DOMException {}
+
+Attempting to render application...
+Application rendered successfully.
+Cannot read properties of undefined (reading 'tags')
+Global error caught: 
+TypeError {}
+
+Cannot read properties of undefined (reading 'tags')
+Global error caught: 
+TypeError {}
+
+The above error occurred in the <MyLibrary> component:
+
+    at MyLibrary (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/MyLibrary.tsx:32:20)
+    at Route (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:323:16)
+    at Switch (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:379:17)
+    at App
+    at QueryClientProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=b0905a65:2805:3)
+    at UserProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/context/UserContext.tsx:21:32)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+at MyLibrary (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/pages/MyLibrary.tsx:32:20)
+at Route (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:323:16)
+at Switch (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=b0905a65:379:17)
+at App
+at QueryClientProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=b0905a65:2805:3)
+at UserProvider (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/src/context/UserContext.tsx:21:32)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://da2fb0a6-dc45-4f63-87fa-d523c5395826-00-6pl5f4wz7c8r.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+Cannot read properties of undefined (reading 'tags')
+Global error caught: 
+TypeError {}
