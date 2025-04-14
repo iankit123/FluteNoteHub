@@ -21,8 +21,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
           onClick={() => onCategoryChange(category)}
           className={
             activeCategory === category 
-              ? 'bg-royal-purple text-ivory-white flex-shrink-0' 
-              : 'bg-ivory-white hover:bg-royal-purple/10 text-dark-slate flex-shrink-0'
+              ? 'bg-blue-600 text-white flex-shrink-0 shadow-sm' 
+              : 'bg-white hover:bg-blue-50 text-blue-600 border-blue-200 flex-shrink-0'
           }
         >
           {category}

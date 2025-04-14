@@ -84,7 +84,8 @@
   .tabs-trigger {
     @apply data-[state=active]:bg-blue-600 data-[state=active]:text-white 
            data-[state=inactive]:bg-white data-[state=inactive]:text-blue-600 
-           transition-all duration-300 shadow-sm hover:brightness-105;
+           transition-all duration-300 shadow-sm hover:brightness-105
+           rounded-md;
   }
   
   /* Navigation gradient options */
