@@ -13,41 +13,41 @@ export default function Explore() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<string>("learning");
   const { user } = useUser();
-  
+
   // Function to handle adding a tutorial to the user's personal collection
   const handleAddToMyNotes = (tutorial: Tutorial) => {
     if (!user) {
       alert("Please log in to add this to your notes");
       return;
     }
-    
+
     // Create a copy of the tutorial with the current user as author
     const newTutorial = {
       ...tutorial,
       id: undefined, // Let the backend generate a new ID
       authorId: user.id,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
-    
+
     // Post to the API
-    fetch('/api/tutorials', {
-      method: 'POST',
+    fetch("/api/tutorials", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(newTutorial)
+      body: JSON.stringify(newTutorial),
     })
-    .then(response => {
-      if (response.ok) {
-        alert("Added to your notes successfully!");
-      } else {
-        throw new Error("Failed to add to your notes");
-      }
-    })
-    .catch(error => {
-      console.error("Error adding to notes:", error);
-      alert("Failed to add to your notes. Please try again.");
-    });
+      .then((response) => {
+        if (response.ok) {
+          alert("Added to your notes successfully!");
+        } else {
+          throw new Error("Failed to add to your notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding to notes:", error);
+        alert("Failed to add to your notes. Please try again.");
+      });
   };
 
   const { data: tutorials, isLoading: tutorialsLoading } = useQuery({
@@ -78,21 +78,24 @@ export default function Explore() {
   };
 
   // Filter tutorials by category
-  const filteredTutorials = tutorials && Array.isArray(tutorials) 
-    ? tutorials.filter((tutorial: Tutorial) => {
-        // Filter by content category (learning/music)
-        const matchesTab = tutorial.category === activeTab;
-        
-        // Filter by user-selected category (all/youtube/website/text)
-        const matchesCategory = 
-          activeCategory === "all" || 
-          (activeCategory === "youtube" && tutorial.videoUrl) || 
-          (activeCategory === "website" && tutorial.websiteUrl) ||
-          (activeCategory === "text" && !tutorial.videoUrl && !tutorial.websiteUrl);
-        
-        return matchesTab && matchesCategory;
-      }) 
-    : [];
+  const filteredTutorials =
+    tutorials && Array.isArray(tutorials)
+      ? tutorials.filter((tutorial: Tutorial) => {
+          // Filter by content category (learning/music)
+          const matchesTab = tutorial.category === activeTab;
+
+          // Filter by user-selected category (all/youtube/website/text)
+          const matchesCategory =
+            activeCategory === "all" ||
+            (activeCategory === "youtube" && tutorial.videoUrl) ||
+            (activeCategory === "website" && tutorial.websiteUrl) ||
+            (activeCategory === "text" &&
+              !tutorial.videoUrl &&
+              !tutorial.websiteUrl);
+
+          return matchesTab && matchesCategory;
+        })
+      : [];
 
   const categories = [
     { id: "all", name: "All" },
@@ -139,37 +142,45 @@ export default function Explore() {
           {user && <AddNoteButton />}
         </div>
 
-        <Tabs 
-          defaultValue="learning" 
-          value={activeTab} 
+        <Tabs
+          defaultValue="learning"
+          value={activeTab}
           onValueChange={setActiveTab}
           className="mb-6"
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="learning" className="flex items-center gap-2 w-full justify-center h-12">
-              <BookOpen className="h-4 w-4" />
+            <TabsTrigger
+              value="learning"
+              className="flex items-center gap-2 w-full justify-center h-12"
+            >
+              <BookOpen className="h-5 w-5" />
               <span>Notes to Learn</span>
             </TabsTrigger>
-            <TabsTrigger value="music" className="flex items-center gap-2 w-full justify-center h-12">
-              <Music className="h-6 w-6 text-royal-purple" />
-              <span>Good Music to Hear</span>
+            <TabsTrigger
+              value="music"
+              className="flex items-center gap-2 w-full justify-center h-12"
+            >
+              <Music className="h-5 w-5" />
+              <span>Hear Good Music </span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="learning" className="mt-4">
-            <CategoryFilter 
-              categories={categories.map(c => c.name)} 
-              activeCategory={activeCategory} 
-              onCategoryChange={(category) => 
-                setActiveCategory(categories.find(c => c.name === category)?.id || "all")
-              } 
+            <CategoryFilter
+              categories={categories.map((c) => c.name)}
+              activeCategory={activeCategory}
+              onCategoryChange={(category) =>
+                setActiveCategory(
+                  categories.find((c) => c.name === category)?.id || "all",
+                )
+              }
             />
-            
+
             {filteredTutorials?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mb-32">
                 {filteredTutorials.map((tutorial: Tutorial) => (
                   <div key={tutorial.id} className="flex flex-col">
-                    <TutorialCard 
+                    <TutorialCard
                       tutorial={tutorial}
                       showAuthor={true}
                       currentUserName={user ? user.displayName : null}
@@ -180,26 +191,32 @@ export default function Explore() {
               </div>
             ) : (
               <div className="text-center py-10">
-                <h3 className="text-lg font-medium text-gray-900">No content found</h3>
-                <p className="mt-1 text-gray-500">Try changing your filters or add some content.</p>
+                <h3 className="text-lg font-medium text-gray-900">
+                  No content found
+                </h3>
+                <p className="mt-1 text-gray-500">
+                  Try changing your filters or add some content.
+                </p>
               </div>
             )}
           </TabsContent>
 
           <TabsContent value="music" className="mt-4">
-            <CategoryFilter 
-              categories={categories.map(c => c.name)} 
-              activeCategory={activeCategory} 
-              onCategoryChange={(category) => 
-                setActiveCategory(categories.find(c => c.name === category)?.id || "all")
-              } 
+            <CategoryFilter
+              categories={categories.map((c) => c.name)}
+              activeCategory={activeCategory}
+              onCategoryChange={(category) =>
+                setActiveCategory(
+                  categories.find((c) => c.name === category)?.id || "all",
+                )
+              }
             />
-            
+
             {filteredTutorials?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mb-32">
                 {filteredTutorials.map((tutorial: Tutorial) => (
                   <div key={tutorial.id} className="flex flex-col">
-                    <TutorialCard 
+                    <TutorialCard
                       tutorial={tutorial}
                       showAuthor={true}
                       currentUserName={user ? user.displayName : null}
@@ -210,8 +227,12 @@ export default function Explore() {
               </div>
             ) : (
               <div className="text-center py-10">
-                <h3 className="text-lg font-medium text-gray-900">No content found</h3>
-                <p className="mt-1 text-gray-500">Try changing your filters or add some content.</p>
+                <h3 className="text-lg font-medium text-gray-900">
+                  No content found
+                </h3>
+                <p className="mt-1 text-gray-500">
+                  Try changing your filters or add some content.
+                </p>
               </div>
             )}
           </TabsContent>

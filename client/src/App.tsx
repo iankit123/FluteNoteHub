@@ -12,25 +12,29 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Metronome from "@/pages/Metronome";
 import Test from "@/pages/Test";
+import MobileFooter from "@/components/MobileFooter";
 
 function App() {
   return (
-    <Switch>
-      <Route path="/test" component={Test} />
-      <Route path="/" component={Home} />
-      <Route path="/explore" component={Explore} />
-      <Route path="/community" component={Community} />
-      <Route path="/metronome" component={Metronome} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/notes/edit/:id" component={EditNote} />
-      <Route path="/notes/new" component={EditNote} />
-      <Route path="/notes/:id" component={NoteDetail} />
-      <Route path="/tutorials/new" component={NewTutorial} />
-      <Route path="/tutorials/:id" component={TutorialDetail} />
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <Switch>
+        <Route path="/test" component={Test} />
+        <Route path="/" component={Home} />
+        <Route path="/explore" component={Explore} />
+        <Route path="/community" component={Community} />
+        <Route path="/metronome" component={Metronome} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/notes/edit/:id" component={EditNote} />
+        <Route path="/notes/new" component={EditNote} />
+        <Route path="/notes/:id" component={NoteDetail} />
+        <Route path="/tutorials/new" component={NewTutorial} />
+        <Route path="/tutorials/:id" component={TutorialDetail} />
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route component={NotFound} />
+      </Switch>
+      <MobileFooter />
+    </>
   );
 }
 
