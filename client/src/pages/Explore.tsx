@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { Tutorial, User } from "@shared/schema";
-import { Spinner } from "@/components/ui/spinner";
 import NavigationBar from "@/components/NavigationBar";
 import TutorialCard from "@/components/TutorialCard";
 import { useUser } from "@/context/UserContext";
@@ -36,25 +35,27 @@ export default function Explore() {
   }, [activeTab]);
 
   const getUserDisplayName = (userId: number | null) => {
-    if (!userId || !users) return "Unknown";
+    if (!userId || !users || !Array.isArray(users)) return "Unknown";
     const user = users.find((u: User) => u.id === userId);
     return user ? user.displayName : "Unknown";
   };
 
   // Filter tutorials by category
-  const filteredTutorials = tutorials?.filter((tutorial: Tutorial) => {
-    // Filter by content category (learning/music)
-    const matchesTab = tutorial.category === activeTab;
-    
-    // Filter by user-selected category (all/youtube/website/text)
-    const matchesCategory = 
-      activeCategory === "all" || 
-      (activeCategory === "youtube" && tutorial.videoUrl) || 
-      (activeCategory === "website" && tutorial.websiteUrl) ||
-      (activeCategory === "text" && !tutorial.videoUrl && !tutorial.websiteUrl);
-    
-    return matchesTab && matchesCategory;
-  });
+  const filteredTutorials = tutorials && Array.isArray(tutorials) 
+    ? tutorials.filter((tutorial: Tutorial) => {
+        // Filter by content category (learning/music)
+        const matchesTab = tutorial.category === activeTab;
+        
+        // Filter by user-selected category (all/youtube/website/text)
+        const matchesCategory = 
+          activeCategory === "all" || 
+          (activeCategory === "youtube" && tutorial.videoUrl) || 
+          (activeCategory === "website" && tutorial.websiteUrl) ||
+          (activeCategory === "text" && !tutorial.videoUrl && !tutorial.websiteUrl);
+        
+        return matchesTab && matchesCategory;
+      }) 
+    : [];
 
   const categories = [
     { id: "all", name: "All" },
@@ -66,85 +67,109 @@ export default function Explore() {
   if (tutorialsLoading || usersLoading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
-        <Spinner size="lg" />
+        <div className="animate-spin text-royal-purple h-12 w-12">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="w-full h-full"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Explore Content</h1>
-        {user && <AddNoteButton />}
+    <>
+      <NavigationBar />
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Explore Content</h1>
+          {user && <AddNoteButton />}
+        </div>
+
+        <Tabs 
+          defaultValue="learning" 
+          value={activeTab} 
+          onValueChange={setActiveTab}
+          className="mb-6"
+        >
+          <TabsList>
+            <TabsTrigger value="learning">Notes to Learn</TabsTrigger>
+            <TabsTrigger value="music">Good Music to Hear</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="learning" className="mt-4">
+            <CategoryFilter 
+              categories={categories.map(c => c.name)} 
+              activeCategory={activeCategory} 
+              onCategoryChange={(category) => 
+                setActiveCategory(categories.find(c => c.name === category)?.id || "all")
+              } 
+            />
+            
+            {filteredTutorials?.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                {filteredTutorials.map((tutorial: Tutorial) => (
+                  <div key={tutorial.id} className="flex flex-col">
+                    <TutorialCard tutorial={tutorial} />
+                    <div className="mt-2 text-sm text-gray-500 italic">
+                      Added by {getUserDisplayName(tutorial.authorId)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <h3 className="text-lg font-medium text-gray-900">No content found</h3>
+                <p className="mt-1 text-gray-500">Try changing your filters or add some content.</p>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="music" className="mt-4">
+            <CategoryFilter 
+              categories={categories.map(c => c.name)} 
+              activeCategory={activeCategory} 
+              onCategoryChange={(category) => 
+                setActiveCategory(categories.find(c => c.name === category)?.id || "all")
+              } 
+            />
+            
+            {filteredTutorials?.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                {filteredTutorials.map((tutorial: Tutorial) => (
+                  <div key={tutorial.id} className="flex flex-col">
+                    <TutorialCard tutorial={tutorial} />
+                    <div className="mt-2 text-sm text-gray-500 italic">
+                      Added by {getUserDisplayName(tutorial.authorId)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <h3 className="text-lg font-medium text-gray-900">No content found</h3>
+                <p className="mt-1 text-gray-500">Try changing your filters or add some content.</p>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
-
-      <Tabs 
-        defaultValue="learning" 
-        value={activeTab} 
-        onValueChange={setActiveTab}
-        className="mb-6"
-      >
-        <TabsList>
-          <TabsTrigger value="learning">Notes to Learn</TabsTrigger>
-          <TabsTrigger value="music">Good Music to Hear</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="learning" className="mt-4">
-          <CategoryFilter 
-            categories={categories.map(c => c.name)} 
-            activeCategory={activeCategory} 
-            onCategoryChange={(category) => 
-              setActiveCategory(categories.find(c => c.name === category)?.id || "all")
-            } 
-          />
-          
-          {filteredTutorials?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-              {filteredTutorials.map((tutorial: Tutorial) => (
-                <div key={tutorial.id} className="flex flex-col">
-                  <TutorialCard tutorial={tutorial} />
-                  <div className="mt-2 text-sm text-gray-500 italic">
-                    Added by {getUserDisplayName(tutorial.authorId)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-10">
-              <h3 className="text-lg font-medium text-gray-900">No content found</h3>
-              <p className="mt-1 text-gray-500">Try changing your filters or add some content.</p>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="music" className="mt-4">
-          <CategoryFilter 
-            categories={categories.map(c => c.name)} 
-            activeCategory={activeCategory} 
-            onCategoryChange={(category) => 
-              setActiveCategory(categories.find(c => c.name === category)?.id || "all")
-            } 
-          />
-          
-          {filteredTutorials?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-              {filteredTutorials.map((tutorial: Tutorial) => (
-                <div key={tutorial.id} className="flex flex-col">
-                  <TutorialCard tutorial={tutorial} />
-                  <div className="mt-2 text-sm text-gray-500 italic">
-                    Added by {getUserDisplayName(tutorial.authorId)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-10">
-              <h3 className="text-lg font-medium text-gray-900">No content found</h3>
-              <p className="mt-1 text-gray-500">Try changing your filters or add some content.</p>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
+    </>
   );
 }
