@@ -15,7 +15,8 @@ import {
   Edit,
   ChevronDown,
   ChevronUp,
-  Plus
+  Plus,
+  PlusCircle
 } from 'lucide-react';
 import { cn, formatTimeAgo, truncateText } from '@/lib/utils';
 
@@ -25,7 +26,10 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   onEdit, 
   onBookmark, 
   onComment, 
-  onShare 
+  onShare,
+  onAddToMyNotes,
+  showAuthor = false,
+  currentUserName = null
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -366,6 +370,15 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
           </div>
         )}
         
+        {/* Author name integrated in card */}
+        {showAuthor && tutorial.authorId && (
+          <div className="mt-3 mb-1">
+            <span className="text-xs text-royal-purple font-medium">
+              Added by {currentUserName && tutorial.authorId === 1 ? "you" : "Anjali"}
+            </span>
+          </div>
+        )}
+
         {/* Author and action buttons */}
         <div className="flex justify-between items-center mt-4">
           {tutorial.author ? (
