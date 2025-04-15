@@ -151,7 +151,7 @@ export default function Explore() {
               <span>Notes to Learn</span>
             </TabsTrigger>
             <TabsTrigger value="music" className="flex items-center gap-2 w-full justify-center">
-              <Music className="h-6 w-6 text-royal-purple" />
+              <Music className="h-8 w-8 text-royal-purple" />
               <span>Good Music to Hear</span>
             </TabsTrigger>
           </TabsList>

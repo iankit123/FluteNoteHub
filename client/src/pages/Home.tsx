@@ -172,7 +172,7 @@ const Home: React.FC = () => {
               value="good-music" 
               className="flex items-center gap-2 tabs-trigger py-3 px-4 w-full"
             >
-              <Music className="h-6 w-6 text-royal-purple" />
+              <Music className="h-8 w-8 text-royal-purple" />
               <span>Good Music to Hear</span>
             </TabsTrigger>
           </TabsList>
