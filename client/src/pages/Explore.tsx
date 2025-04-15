@@ -145,12 +145,12 @@ export default function Explore() {
           onValueChange={setActiveTab}
           className="mb-6"
         >
-          <TabsList>
-            <TabsTrigger value="learning" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="learning" className="flex items-center gap-2 w-full justify-center">
               <BookOpen className="h-4 w-4" />
               <span>Notes to Learn</span>
             </TabsTrigger>
-            <TabsTrigger value="music" className="flex items-center gap-2">
+            <TabsTrigger value="music" className="flex items-center gap-2 w-full justify-center">
               <Music className="h-6 w-6 text-royal-purple" />
               <span>Good Music to Hear</span>
             </TabsTrigger>
