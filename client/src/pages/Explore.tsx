@@ -7,6 +7,7 @@ import TutorialCard from "@/components/TutorialCard";
 import { useUser } from "@/context/UserContext";
 import CategoryFilter from "@/components/CategoryFilter";
 import AddNoteButton from "@/components/AddNoteButton";
+import { BookOpen, Music } from "lucide-react";
 
 export default function Explore() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -132,7 +133,7 @@ export default function Explore() {
   return (
     <>
       <NavigationBar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Explore Content</h1>
           {user && <AddNoteButton />}
@@ -145,8 +146,14 @@ export default function Explore() {
           className="mb-6"
         >
           <TabsList>
-            <TabsTrigger value="learning">Notes to Learn</TabsTrigger>
-            <TabsTrigger value="music">Good Music to Hear</TabsTrigger>
+            <TabsTrigger value="learning" className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              <span>Notes to Learn</span>
+            </TabsTrigger>
+            <TabsTrigger value="music" className="flex items-center gap-2">
+              <Music className="h-6 w-6 text-royal-purple" />
+              <span>Good Music to Hear</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="learning" className="mt-4">
