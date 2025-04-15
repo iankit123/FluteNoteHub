@@ -1,6 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, get, remove, push, child, update } from "firebase/database";
-import type { Tutorial, InsertTutorial, Tag, InsertTag, Note, InsertNote } from "@shared/schema";
+import type { 
+  Tutorial, InsertTutorial, 
+  Tag, InsertTag, 
+  Note, InsertNote, 
+  CommunityPost, InsertCommunityPost,
+  CommunityComment, InsertCommunityComment
+} from "@shared/schema";
 
 // Your Firebase configuration
 const firebaseConfig = {
@@ -241,6 +247,198 @@ export const firebaseDB = {
       return true;
     } catch (error) {
       console.error(`Error deleting note ${id} from Firebase:`, error);
+      return false;
+    }
+  },
+  
+  // Community Posts
+  _communityPostsCache: null as CommunityPost[] | null,
+  _lastPostsFetchTime: 0,
+  
+  async getAllCommunityPosts(): Promise<CommunityPost[]> {
+    // Use cache if it's less than 10 seconds old
+    const now = Date.now();
+    if (this._communityPostsCache && now - this._lastPostsFetchTime < 10000) {
+      return this._communityPostsCache;
+    }
+    
+    try {
+      const postsRef = ref(database, 'communityPosts');
+      const snapshot = await get(postsRef);
+      
+      if (snapshot.exists()) {
+        const postsObj = snapshot.val();
+        const posts = Object.keys(postsObj).map(key => ({
+          id: parseInt(key),
+          ...postsObj[key]
+        }));
+        
+        // Sort by createdAt in descending order (newest first)
+        posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
+        // Update cache
+        this._communityPostsCache = posts;
+        this._lastPostsFetchTime = now;
+        
+        return posts;
+      }
+      return [];
+    } catch (error) {
+      console.error("Error fetching community posts:", error);
+      return this._communityPostsCache || [];
+    }
+  },
+  
+  async getCommunityPost(id: number): Promise<CommunityPost | undefined> {
+    try {
+      const postRef = ref(database, `communityPosts/${id}`);
+      const snapshot = await get(postRef);
+      
+      if (snapshot.exists()) {
+        return {
+          id,
+          ...snapshot.val()
+        };
+      }
+      return undefined;
+    } catch (error) {
+      console.error(`Error fetching community post ${id}:`, error);
+      return undefined;
+    }
+  },
+  
+  async createCommunityPost(post: CommunityPost): Promise<boolean> {
+    try {
+      await set(ref(database, `communityPosts/${post.id}`), {
+        title: post.title,
+        content: post.content,
+        userId: post.userId,
+        likesCount: post.likesCount || 0,
+        createdAt: post.createdAt || new Date()
+      });
+      
+      // Reset cache
+      this._communityPostsCache = null;
+      this._lastPostsFetchTime = 0;
+      
+      console.log(`New community post saved to Firebase`);
+      return true;
+    } catch (error) {
+      console.error("Error saving community post to Firebase:", error);
+      return false;
+    }
+  },
+  
+  async updateCommunityPost(id: number, postData: Partial<InsertCommunityPost>): Promise<CommunityPost | undefined> {
+    try {
+      const postRef = ref(database, `communityPosts/${id}`);
+      const snapshot = await get(postRef);
+      
+      if (!snapshot.exists()) {
+        return undefined;
+      }
+      
+      const currentPost = snapshot.val();
+      const updatedPost = {
+        ...currentPost,
+        ...postData
+      };
+      
+      await update(postRef, updatedPost);
+      
+      // Reset cache
+      this._communityPostsCache = null;
+      this._lastPostsFetchTime = 0;
+      
+      return {
+        id,
+        ...updatedPost
+      };
+    } catch (error) {
+      console.error(`Error updating community post ${id}:`, error);
+      return undefined;
+    }
+  },
+  
+  async deleteCommunityPost(id: number): Promise<boolean> {
+    try {
+      await remove(ref(database, `communityPosts/${id}`));
+      // Also remove comments for this post
+      await remove(ref(database, `communityComments/${id}`));
+      
+      // Reset cache
+      this._communityPostsCache = null;
+      this._lastPostsFetchTime = 0;
+      
+      return true;
+    } catch (error) {
+      console.error(`Error deleting community post ${id}:`, error);
+      return false;
+    }
+  },
+  
+  // Community Comments
+  async getCommunityComments(postId: number): Promise<CommunityComment[]> {
+    try {
+      const commentsRef = ref(database, `communityComments/${postId}`);
+      const snapshot = await get(commentsRef);
+      
+      if (snapshot.exists()) {
+        const commentsObj = snapshot.val();
+        const comments = Object.keys(commentsObj).map(key => ({
+          id: parseInt(key),
+          ...commentsObj[key]
+        }));
+        
+        // Sort by createdAt ascending order (oldest first in comment threads)
+        comments.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        
+        return comments;
+      }
+      return [];
+    } catch (error) {
+      console.error(`Error fetching comments for post ${postId}:`, error);
+      return [];
+    }
+  },
+  
+  async createCommunityComment(comment: CommunityComment): Promise<boolean> {
+    try {
+      await set(ref(database, `communityComments/${comment.postId}/${comment.id}`), {
+        content: comment.content,
+        userId: comment.userId,
+        postId: comment.postId,
+        likesCount: comment.likesCount || 0,
+        createdAt: comment.createdAt || new Date()
+      });
+      
+      console.log(`New comment saved to Firebase`);
+      return true;
+    } catch (error) {
+      console.error("Error saving comment to Firebase:", error);
+      return false;
+    }
+  },
+  
+  async updateCommentLikes(postId: number, commentId: number, likesCount: number): Promise<boolean> {
+    try {
+      await update(ref(database, `communityComments/${postId}/${commentId}`), { likesCount });
+      return true;
+    } catch (error) {
+      console.error(`Error updating comment likes:`, error);
+      return false;
+    }
+  },
+  
+  async updatePostLikes(postId: number, likesCount: number): Promise<boolean> {
+    try {
+      await update(ref(database, `communityPosts/${postId}`), { likesCount });
+      // Reset cache
+      this._communityPostsCache = null;
+      this._lastPostsFetchTime = 0;
+      return true;
+    } catch (error) {
+      console.error(`Error updating post likes:`, error);
       return false;
     }
   },
