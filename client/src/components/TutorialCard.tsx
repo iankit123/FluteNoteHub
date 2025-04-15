@@ -401,6 +401,15 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
           )}
           
           <div className="flex space-x-2 text-dark-slate/60">
+            {onAddToMyNotes && !isPersonalNote && (
+              <button 
+                onClick={() => onAddToMyNotes(tutorial)}
+                className="hover:text-royal-purple transition-colors bg-royal-purple/10 text-royal-purple px-2 py-1 rounded text-xs flex items-center"
+              >
+                <PlusCircle className="h-3 w-3 mr-1" />
+                <span>Add to My Notes</span>
+              </button>
+            )}
             {isPersonalNote && (
               <button 
                 onClick={() => onEdit?.(tutorial)} 

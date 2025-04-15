@@ -12,6 +12,42 @@ export default function Explore() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<string>("learning");
   const { user } = useUser();
+  
+  // Function to handle adding a tutorial to the user's personal collection
+  const handleAddToMyNotes = (tutorial: Tutorial) => {
+    if (!user) {
+      alert("Please log in to add this to your notes");
+      return;
+    }
+    
+    // Create a copy of the tutorial with the current user as author
+    const newTutorial = {
+      ...tutorial,
+      id: undefined, // Let the backend generate a new ID
+      authorId: user.id,
+      createdAt: new Date().toISOString()
+    };
+    
+    // Post to the API
+    fetch('/api/tutorials', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newTutorial)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("Added to your notes successfully!");
+      } else {
+        throw new Error("Failed to add to your notes");
+      }
+    })
+    .catch(error => {
+      console.error("Error adding to notes:", error);
+      alert("Failed to add to your notes. Please try again.");
+    });
+  };
 
   const { data: tutorials, isLoading: tutorialsLoading } = useQuery({
     queryKey: ["/api/tutorials"],
@@ -126,10 +162,12 @@ export default function Explore() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                 {filteredTutorials.map((tutorial: Tutorial) => (
                   <div key={tutorial.id} className="flex flex-col">
-                    <TutorialCard tutorial={tutorial} />
-                    <div className="mt-2 text-sm text-gray-500 italic">
-                      Added by {getUserDisplayName(tutorial.authorId)}
-                    </div>
+                    <TutorialCard 
+                      tutorial={tutorial}
+                      showAuthor={true}
+                      currentUserName={user ? user.displayName : null}
+                      onAddToMyNotes={user ? handleAddToMyNotes : undefined}
+                    />
                   </div>
                 ))}
               </div>
@@ -154,10 +192,12 @@ export default function Explore() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                 {filteredTutorials.map((tutorial: Tutorial) => (
                   <div key={tutorial.id} className="flex flex-col">
-                    <TutorialCard tutorial={tutorial} />
-                    <div className="mt-2 text-sm text-gray-500 italic">
-                      Added by {getUserDisplayName(tutorial.authorId)}
-                    </div>
+                    <TutorialCard 
+                      tutorial={tutorial}
+                      showAuthor={true}
+                      currentUserName={user ? user.displayName : null}
+                      onAddToMyNotes={user ? handleAddToMyNotes : undefined}
+                    />
                   </div>
                 ))}
               </div>
