@@ -27,6 +27,8 @@ const Home: React.FC = () => {
     refetchOnMount: 'always',
     refetchOnWindowFocus: true,
     refetchInterval: 3000, // Refetch every 3 seconds
+    select: (data) => data.filter(tutorial => user && tutorial.authorId === user.id),
+    enabled: !!user, // Only fetch if user is logged in
   });
   
   // Also fetch notes if a user is logged in
@@ -36,6 +38,7 @@ const Home: React.FC = () => {
     refetchOnMount: 'always',
     refetchOnWindowFocus: true,
     refetchInterval: 3000, // Refetch every 3 seconds
+    select: (data) => data.filter(note => user && note.userId === user.id),
     enabled: !!user, // Only fetch if user is logged in
   });
   
