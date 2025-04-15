@@ -86,7 +86,17 @@ export default function DiscussionPostCard({
               variant="ghost" 
               size="sm" 
               className="text-royal-purple hover:bg-royal-purple/10"
-              onClick={() => onReply && onReply(post)}
+              onClick={() => {
+                // Set this post as active (shows comments) and focus the comment textarea
+                toggleActive(post.id);
+                // Small delay to ensure the comment section is rendered
+                setTimeout(() => {
+                  const textarea = document.querySelector(`#comment-textarea-${post.id}`);
+                  if (textarea) {
+                    (textarea as HTMLTextAreaElement).focus();
+                  }
+                }, 100);
+              }}
             >
               Reply
             </Button>
@@ -140,6 +150,7 @@ export default function DiscussionPostCard({
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <textarea 
+                      id={`comment-textarea-${post.id}`}
                       className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-royal-purple focus:border-transparent" 
                       rows={2}
                       placeholder="Add your comment..."

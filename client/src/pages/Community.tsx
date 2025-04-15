@@ -10,17 +10,17 @@ import NewDiscussionDialog from '@/components/NewDiscussionDialog';
 
 // Import sample user data with Indian context to serve as avatars and user info
 const indianTeachers = [
-  { id: 101, displayName: "Anjali Sharma", avatar: "", isInstructor: true },
-  { id: 102, displayName: "Vikram Reddy", avatar: "", isInstructor: true },
-  { id: 103, displayName: "Priya Gupta", avatar: "", isInstructor: true }
+  { id: 101, displayName: "Anjali Sharma", avatar: "", username: "anjali.sharma", password: "pwd", isInstructor: true },
+  { id: 102, displayName: "Vikram Reddy", avatar: "", username: "vikram.reddy", password: "pwd", isInstructor: true },
+  { id: 103, displayName: "Priya Gupta", avatar: "", username: "priya.gupta", password: "pwd", isInstructor: true }
 ];
 
 const indianStudents = [
-  { id: 201, displayName: "Rahul Patel", avatar: "", isInstructor: false },
-  { id: 202, displayName: "Deepak Singh", avatar: "", isInstructor: false },
-  { id: 203, displayName: "Meera Khanna", avatar: "", isInstructor: false },
-  { id: 204, displayName: "Arjun Malhotra", avatar: "", isInstructor: false },
-  { id: 205, displayName: "Kiran Joshi", avatar: "", isInstructor: false }
+  { id: 201, displayName: "Rahul Patel", avatar: "", username: "rahul.patel", password: "pwd", isInstructor: false },
+  { id: 202, displayName: "Deepak Singh", avatar: "", username: "deepak.singh", password: "pwd", isInstructor: false },
+  { id: 203, displayName: "Meera Khanna", avatar: "", username: "meera.khanna", password: "pwd", isInstructor: false },
+  { id: 204, displayName: "Arjun Malhotra", avatar: "", username: "arjun.malhotra", password: "pwd", isInstructor: false },
+  { id: 205, displayName: "Kiran Joshi", avatar: "", username: "kiran.joshi", password: "pwd", isInstructor: false }
 ];
 
 // Combine all users
@@ -83,6 +83,7 @@ const sampleComments = [
     userId: 202, 
     content: "I started with a teacher in Pune who specialized in Hindustani classical, but YouTube has been great for picking up fusion techniques.",
     likesCount: 7,
+    parentId: null,
     createdAt: new Date("2025-04-10T12:45:00Z")
   },
   { 
@@ -91,6 +92,7 @@ const sampleComments = [
     userId: 201, 
     content: "Completely self-taught! Started with a bamboo flute I bought in Varanasi during a trip. Any tips for a beginner?",
     likesCount: 3,
+    parentId: null,
     createdAt: new Date("2025-04-10T14:30:00Z")
   },
   { 
@@ -99,6 +101,7 @@ const sampleComments = [
     userId: 102, 
     content: "The flute part in 'Tum Hi Ho' from Aashiqui 2 looks simple but getting the emotion right is so difficult!",
     likesCount: 5,
+    parentId: null,
     createdAt: new Date("2025-04-12T15:20:00Z")
   },
   { 
@@ -107,6 +110,7 @@ const sampleComments = [
     userId: 101, 
     content: "For me it was 'Kabhi Jo Badal Barse' - those high notes require perfect breath control.",
     likesCount: 2,
+    parentId: null,
     createdAt: new Date("2025-04-12T16:15:00Z")
   },
   { 
@@ -115,6 +119,7 @@ const sampleComments = [
     userId: 201, 
     content: "I started with 'Mere Sapno Ki Rani' because my grandfather used to hum it all the time.",
     likesCount: 4,
+    parentId: null,
     createdAt: new Date("2025-04-13T14:25:00Z")
   },
   { 
@@ -123,6 +128,7 @@ const sampleComments = [
     userId: 203, 
     content: "Krishna Bhajans sound magical on the flute! I love playing 'Achyutam Keshavam' during morning practice.",
     likesCount: 6,
+    parentId: null,
     createdAt: new Date("2025-04-14T09:40:00Z")
   },
   { 
@@ -131,6 +137,7 @@ const sampleComments = [
     userId: 101, 
     content: "The Gayatri Mantra has a beautiful flow when played slowly on the flute. Perfect for meditation sessions.",
     likesCount: 8,
+    parentId: null,
     createdAt: new Date("2025-04-14T10:30:00Z")
   },
   { 
@@ -139,6 +146,7 @@ const sampleComments = [
     userId: 102, 
     content: "Anandi Musicals in Pune makes excellent hand-crafted flutes. Worth the trip if you're nearby!",
     likesCount: 3,
+    parentId: null,
     createdAt: new Date("2025-04-15T09:15:00Z")
   },
   { 
@@ -147,6 +155,7 @@ const sampleComments = [
     userId: 202, 
     content: "I ordered from Swarsangam online and their flutes are excellent for the price. They have a good range in your budget.",
     likesCount: 5,
+    parentId: null,
     createdAt: new Date("2025-04-15T10:45:00Z")
   }
 ];
@@ -171,6 +180,7 @@ export default function Community() {
         username: user.username,
         displayName: user.displayName,
         avatar: user.avatar,
+        password: "password", // Add password field for type compatibility
         isInstructor: user.isInstructor || false
       };
     }
@@ -180,9 +190,10 @@ export default function Community() {
     if (sampleUser) {
       return {
         id: sampleUser.id,
-        username: sampleUser.displayName.toLowerCase().replace(/\s+/g, '.'),
+        username: sampleUser.username || sampleUser.displayName.toLowerCase().replace(/\s+/g, '.'),
         displayName: sampleUser.displayName,
         avatar: sampleUser.avatar,
+        password: sampleUser.password || "password", // Add password field for type compatibility
         isInstructor: sampleUser.isInstructor
       };
     }
@@ -196,6 +207,7 @@ export default function Community() {
     username: "anonymous.user",
     displayName: "Anonymous User",
     avatar: "",
+    password: "password", // Add password field for type compatibility
     isInstructor: false
   });
 
@@ -404,6 +416,7 @@ export default function Community() {
                     username: user.username,
                     displayName: user.displayName,
                     avatar: user.avatar,
+                    password: "password", // Add password field for type compatibility
                     isInstructor: user.isInstructor || false
                   } : null}
                   onPostComment={handlePostComment}
@@ -423,6 +436,7 @@ export default function Community() {
           username: user.username,
           displayName: user.displayName,
           avatar: user.avatar,
+          password: "password", // Add password field for type compatibility
           isInstructor: user.isInstructor || false
         } : null}
       />
