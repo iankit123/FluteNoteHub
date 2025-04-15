@@ -141,6 +141,7 @@ export const insertCommunityPostSchema = createInsertSchema(communityPosts).pick
   content: true,
   userId: true,
   category: true,
+  likesCount: true,
 });
 
 // Community post tags
@@ -163,6 +164,7 @@ export const communityComments = pgTable("community_comments", {
   postId: integer("post_id").references(() => communityPosts.id),
   parentId: integer("parent_id").references(() => communityComments.id),
   createdAt: timestamp("created_at").defaultNow(),
+  likesCount: integer("likes_count").default(0),
 });
 
 export const insertCommunityCommentSchema = createInsertSchema(communityComments).pick({
@@ -170,6 +172,7 @@ export const insertCommunityCommentSchema = createInsertSchema(communityComments
   userId: true,
   postId: true,
   parentId: true,
+  likesCount: true,
 });
 
 // Types
