@@ -10,14 +10,14 @@ import type {
 
 // Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAXggS45GgtQEDKt7ylTmKMXIg2PPfmCB4",
-  authDomain: "flute-notes-f985e.firebaseapp.com",
-  projectId: "flute-notes-f985e",
-  databaseURL: "https://flute-notes-f985e-default-rtdb.firebaseio.com",
-  storageBucket: "flute-notes-f985e.firebasestorage.app",
-  messagingSenderId: "461328034114",
-  appId: "1:461328034114:web:6bc32ef02899cd0932c0db",
-  measurementId: "G-NCP8XDCGBD"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
