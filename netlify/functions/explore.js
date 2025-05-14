@@ -1,7 +1,19 @@
 // Serverless function for the Explore tab content
 const { tutorials, tags, notes } = require('./seed');
 
+// Debug helper function
+const logDebug = (message, data) => {
+  console.log(`EXPLORE API: ${message}`, data ? JSON.stringify(data).substring(0, 200) + '...' : '');
+};
+
 exports.handler = async function(event, context) {
+  // Log request details for debugging
+  logDebug('Request received', { 
+    path: event.path,
+    httpMethod: event.httpMethod,
+    queryParams: event.queryStringParameters,
+    headers: event.headers
+  });
   // Enable CORS for all requests
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -25,14 +37,25 @@ exports.handler = async function(event, context) {
   
   // Handle GET request for explore content
   if (event.httpMethod === 'GET') {
+    logDebug('Processing GET request for explore data');
+    
     // Create a comprehensive dataset for the Explore tab
-    const exploreData = {
-      tutorials: tutorials.map(tutorial => ({
+    logDebug('Preparing tutorials data', { count: tutorials.length });
+    const tutorialsWithTags = tutorials.map(tutorial => {
+      const tutorialTags = tags.filter((_, index) => index % 3 === tutorial.id % 3);
+      const type = ['youtube', 'website', 'text'][tutorial.id % 3];
+      
+      return {
         ...tutorial,
-        // Add some sample tags to each tutorial
-        tags: tags.filter((_, index) => index % 3 === tutorial.id % 3),
-        type: ['youtube', 'website', 'text'][tutorial.id % 3] // Assign different types for variety
-      })),
+        tags: tutorialTags,
+        type: type
+      };
+    });
+    
+    logDebug('Tutorials processed successfully', { count: tutorialsWithTags.length });
+    
+    const exploreData = {
+      tutorials: tutorialsWithTags,
       featuredContent: [
         {
           id: 101,
@@ -67,30 +90,53 @@ exports.handler = async function(event, context) {
 
     // Filter content based on category if specified
     if (category !== 'all') {
+      logDebug(`Filtering by category: ${category}`);
       exploreData.tutorials = exploreData.tutorials.filter(
         item => item.category === category
       );
       exploreData.featuredContent = exploreData.featuredContent.filter(
         item => item.category === category
       );
+      logDebug('After category filtering', { 
+        tutorialCount: exploreData.tutorials.length,
+        featuredCount: exploreData.featuredContent.length 
+      });
     }
 
     // Filter content based on type if specified
     if (type !== 'all') {
+      logDebug(`Filtering by type: ${type}`);
       exploreData.tutorials = exploreData.tutorials.filter(
         item => item.type === type
       );
       exploreData.featuredContent = exploreData.featuredContent.filter(
         item => item.type === type
       );
+      logDebug('After type filtering', { 
+        tutorialCount: exploreData.tutorials.length,
+        featuredCount: exploreData.featuredContent.length 
+      });
     }
 
-    console.log(`Returning explore data with ${exploreData.tutorials.length} tutorials and ${exploreData.featuredContent.length} featured items`);
+    // Add a special flag to help debug if the data is coming from Netlify functions
+    exploreData.source = 'netlify-function';
+    exploreData.timestamp = new Date().toISOString();
+    
+    logDebug(`Returning explore data with ${exploreData.tutorials.length} tutorials and ${exploreData.featuredContent.length} featured items`);
+    
+    // Return the response with detailed headers for debugging
+    const responseHeaders = {
+      ...headers,
+      'X-Debug-Source': 'netlify-function',
+      'X-Debug-Timestamp': new Date().toISOString(),
+      'X-Debug-TutorialCount': exploreData.tutorials.length.toString(),
+      'X-Debug-FeaturedCount': exploreData.featuredContent.length.toString()
+    };
     
     return {
       statusCode: 200,
       body: JSON.stringify(exploreData),
-      headers
+      headers: responseHeaders
     };
   }
   
