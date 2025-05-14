@@ -1,8 +1,10 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import logger, { debugFetch, isProduction } from "./debug";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     const text = (await res.text()) || res.statusText;
+    logger.error(`API Response Error: ${res.status}: ${text}`);
     throw new Error(`${res.status}: ${text}`);
   }
 }
@@ -16,7 +18,14 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<any> {
-  console.log(`API Request: ${method} ${url}`, data);
+  logger.api(`Request: ${method} ${url}`, data);
+  
+  // Add debugging information to URL for production environment
+  const requestUrl = isProduction ? 
+    `${url}${url.includes('?') ? '&' : '?'}_debug=true&_env=prod&_ts=${Date.now()}` : 
+    url;
+  
+  logger.api(`Full request URL: ${requestUrl}`);
   
   // Check if we can use cache for GET requests
   if (method.toUpperCase() === 'GET') {
@@ -25,12 +34,16 @@ export async function apiRequest(
     const cached = cache[cacheKey];
     
     if (cached && now - cached.timestamp < CACHE_DURATION) {
+      logger.api(`Using cached data for ${url}`, cached.data);
       return cached.data;
     }
   }
   
   try {
-    const res = await fetch(url, {
+    logger.api(`Sending ${method} request to ${requestUrl}`);
+    
+    // Use debugFetch instead of regular fetch
+    const res = await debugFetch(requestUrl, {
       method,
       headers: data ? { "Content-Type": "application/json" } : {},
       body: data ? JSON.stringify(data) : undefined,
@@ -38,9 +51,9 @@ export async function apiRequest(
     });
 
     if (!res.ok) {
-      console.error(`API error ${res.status}: ${res.statusText}`);
+      logger.error(`API error ${res.status}: ${res.statusText}`);
       const errorText = await res.text();
-      console.error(`Error details: ${errorText}`);
+      logger.error(`Error details: ${errorText}`);
       throw new Error(`${res.status}: ${res.statusText} - ${errorText}`);
     }
     
@@ -78,25 +91,41 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     const url = queryKey[0] as string;
+    logger.api(`Query function called for key: ${url}`);
+    
+    // Add debugging information to URL for production environment
+    const requestUrl = isProduction ? 
+      `${url}${url.includes('?') ? '&' : '?'}_debug=true&_env=prod&_ts=${Date.now()}` : 
+      url;
+    
+    logger.api(`Full request URL: ${requestUrl}`);
+    
     const cacheKey = url;
     const now = Date.now();
     const cached = cache[cacheKey];
     
     // Use cache if available and fresh
     if (cached && now - cached.timestamp < CACHE_DURATION) {
+      logger.api(`Using cached data for ${url}`, cached.data);
       return cached.data;
     }
     
-    const res = await fetch(url, {
+    logger.api(`Fetching data from ${requestUrl}`);
+    
+    // Use debugFetch instead of regular fetch
+    const res = await debugFetch(requestUrl, {
       credentials: "include",
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+      logger.warn(`Unauthorized (401) for ${url}, returning null as configured`);
       return null;
     }
 
     await throwIfResNotOk(res);
+    logger.api(`Parsing JSON response from ${url}`);
     const data = await res.json();
+    logger.api(`Received data from ${url}:`, data);
     
     // Store in cache
     cache[cacheKey] = {
@@ -122,7 +151,7 @@ export const queryClient = new QueryClient({
     mutations: {
       retry: false,
       // Automatically invalidate relevant queries after mutations
-      onSuccess: (_, variables, context) => {
+      onSuccess: (_, variables, context: any) => {
         // This will be overridden by specific mutation configs but provides a good default
         const url = context?.url || '';
         if (url) {

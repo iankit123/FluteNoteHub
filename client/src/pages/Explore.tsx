@@ -7,7 +7,9 @@ import TutorialCard from "@/components/TutorialCard";
 import { useUser } from "@/context/UserContext";
 import CategoryFilter from "@/components/CategoryFilter";
 import AddNoteButton from "@/components/AddNoteButton";
-import { BookOpen, Music } from "lucide-react";
+import { BookOpen, Music, AlertCircle } from "lucide-react";
+import logger, { isProduction, debugFetch } from "@/lib/debug";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Explore() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -50,13 +52,96 @@ export default function Explore() {
       });
   };
 
-  const { data: tutorials, isLoading: tutorialsLoading } = useQuery({
-    queryKey: ["/api/tutorials"],
+  // Add detailed logging for the Explore component
+  useEffect(() => {
+    logger.info('Explore component mounted');
+    logger.debug('Environment:', isProduction ? 'Production' : 'Development');
+    logger.debug('Active category:', activeCategory);
+    logger.debug('Active tab:', activeTab);
+    
+    // Direct API call to debug
+    const debugApiCalls = async () => {
+      try {
+        logger.debug('Making direct API call to /api/tutorials for debugging');
+        const tutorialsResponse = await debugFetch('/api/tutorials');
+        const tutorialsData = await tutorialsResponse.json();
+        logger.debug('Direct API call result for tutorials:', tutorialsData);
+        
+        logger.debug('Making direct API call to /api/explore for debugging');
+        const exploreResponse = await debugFetch('/api/explore');
+        const exploreData = await exploreResponse.json();
+        logger.debug('Direct API call result for explore:', exploreData);
+      } catch (error) {
+        logger.error('Debug API call failed:', error);
+      }
+    };
+    
+    // Run the debug API calls
+    debugApiCalls();
+    
+    return () => {
+      logger.info('Explore component unmounted');
+    };
+  }, []);
+
+  // Enhanced queries with error handling and logging
+  const { 
+    data: tutorials, 
+    isLoading: tutorialsLoading,
+    error: tutorialsError 
+  } = useQuery<any[], Error>({
+    queryKey: ["/api/tutorials"]
   });
 
-  const { data: users, isLoading: usersLoading } = useQuery({
-    queryKey: ["/api/users"],
+  // Log tutorials data whenever it changes
+  useEffect(() => {
+    if (tutorials) {
+      logger.info('Tutorials data loaded successfully');
+      logger.debug('Tutorials data:', tutorials);
+    }
+    if (tutorialsError) {
+      logger.error('Failed to load tutorials data:', tutorialsError);
+    }
+  }, [tutorials, tutorialsError]);
+
+  const { 
+    data: users, 
+    isLoading: usersLoading,
+    error: usersError 
+  } = useQuery<any[], Error>({
+    queryKey: ["/api/users"]
   });
+
+  // Log users data whenever it changes
+  useEffect(() => {
+    if (users) {
+      logger.info('Users data loaded successfully');
+      logger.debug('Users data:', users);
+    }
+    if (usersError) {
+      logger.error('Failed to load users data:', usersError);
+    }
+  }, [users, usersError]);
+  
+  // Additional query for explore-specific data
+  const { 
+    data: exploreData, 
+    isLoading: exploreLoading,
+    error: exploreError 
+  } = useQuery<any, Error>({
+    queryKey: ["/api/explore"]
+  });
+
+  // Log explore data whenever it changes
+  useEffect(() => {
+    if (exploreData) {
+      logger.info('Explore data loaded successfully');
+      logger.debug('Explore data:', exploreData);
+    }
+    if (exploreError) {
+      logger.error('Failed to load explore data:', exploreError);
+    }
+  }, [exploreData, exploreError]);
 
   // Check if hash is present and use it to set active tab
   useEffect(() => {
@@ -104,10 +189,11 @@ export default function Explore() {
     { id: "text", name: "Text" },
   ];
 
-  if (tutorialsLoading || usersLoading) {
+  // Display loading state
+  if (tutorialsLoading || usersLoading || exploreLoading) {
     return (
-      <div className="flex justify-center items-center h-[60vh]">
-        <div className="animate-spin text-royal-purple h-12 w-12">
+      <div className="flex flex-col justify-center items-center h-[60vh]">
+        <div className="animate-spin text-royal-purple h-12 w-12 mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -129,7 +215,53 @@ export default function Explore() {
             ></path>
           </svg>
         </div>
+        <p className="text-gray-600">Loading content...</p>
+        <p className="text-xs text-gray-400 mt-2">{isProduction ? 'Production' : 'Development'} environment</p>
       </div>
+    );
+  }
+  
+  // Display errors if any
+  if (tutorialsError || usersError || exploreError) {
+    return (
+      <>
+        <NavigationBar />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <AlertCircle className="h-5 w-5 text-red-500" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">Error loading content</h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <p>There was an error loading the content. Please try again later.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Debugging information */}
+          <div className="bg-gray-100 p-4 rounded-md mt-6">
+            <h3 className="text-sm font-medium text-gray-800 mb-2">Debug Information</h3>
+            <div className="text-xs font-mono bg-white p-3 rounded border overflow-auto max-h-[300px]">
+              <p>Environment: {isProduction ? 'Production' : 'Development'}</p>
+              <p>Tutorials Error: {tutorialsError?.message || 'None'}</p>
+              <p>Users Error: {usersError?.message || 'None'}</p>
+              <p>Explore Error: {exploreError?.message || 'None'}</p>
+              <p className="mt-2">API Endpoints:</p>
+              <ul className="list-disc pl-5">
+                <li>/api/tutorials</li>
+                <li>/api/users</li>
+                <li>/api/explore</li>
+              </ul>
+              <p className="mt-2">Tutorials Data: {tutorials ? `${tutorials.length} items` : 'No data'}</p>
+              <p>Users Data: {users ? `${users.length} items` : 'No data'}</p>
+              <p>Explore Data: {exploreData ? 'Available' : 'No data'}</p>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
