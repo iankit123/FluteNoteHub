@@ -1,5 +1,5 @@
 // Serverless function for user login
-const { users } = require('../../server/seed');
+const { users } = require('./seed');
 
 exports.handler = async function(event, context) {
   // Only allow POST requests

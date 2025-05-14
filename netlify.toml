@@ -9,6 +9,16 @@
   to = "/.netlify/functions/login"
   status = 200
 
+[[redirects]]
+  from = "/api/tutorials"
+  to = "/.netlify/functions/tutorials"
+  status = 200
+
+[[redirects]]
+  from = "/api/tags"
+  to = "/.netlify/functions/tags"
+  status = 200
+
 # For all other routes, serve the SPA
 [[redirects]]
   from = "/*"
