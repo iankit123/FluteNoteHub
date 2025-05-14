@@ -2,8 +2,6 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/lib/queryClient";
 import { UserProvider } from "@/context/UserContext";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -16,6 +14,11 @@ window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled promise rejection:', event.reason);
 });
 
+// Add Firebase specific error logging
+window.addEventListener('firebase-error', (event: any) => {
+  console.error('Firebase error:', event.detail);
+});
+
 try {
   console.log('Attempting to render application...');
   const rootElement = document.getElementById("root");
@@ -24,12 +27,10 @@ try {
   } else {
     const root = createRoot(rootElement);
     root.render(
-      <UserProvider>
-        <QueryClientProvider client={queryClient}>
-          <App />
-          <Toaster />
-        </QueryClientProvider>
-      </UserProvider>
+      <>
+        <App />
+        <Toaster />
+      </>
     );
     console.log('Application rendered successfully.');
   }

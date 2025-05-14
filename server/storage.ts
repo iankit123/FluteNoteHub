@@ -138,13 +138,19 @@ export class MemStorage implements IStorage {
   
   // Load data from Firebase and populate MemStorage
   private async loadFromFirebase() {
+    console.log('Server: Starting to load data from Firebase');
     try {
+      console.log('Server: Importing Firebase module');
       const { firebaseDB } = await import('@/lib/firebase');
+      console.log('Server: Firebase module imported successfully');
       
       // Load tutorials from Firebase
+      console.log('Server: Fetching tutorials from Firebase');
       const tutorials = await firebaseDB.getAllTutorials();
+      console.log(`Server: Fetched tutorials data:`, tutorials);
+      
       if (tutorials && tutorials.length > 0) {
-        console.log(`Loaded ${tutorials.length} tutorials from Firebase`);
+        console.log(`Server: Loaded ${tutorials.length} tutorials from Firebase`);
         
         // Clear existing tutorials and add Firebase tutorials
         this.tutorials.clear();
@@ -156,7 +162,7 @@ export class MemStorage implements IStorage {
             } else {
               tutorial.category = 'learning';
             }
-            console.log(`Migrated tutorial ${tutorial.id} "${tutorial.title}" to category: ${tutorial.category}`);
+            console.log(`Server: Migrated tutorial ${tutorial.id} "${tutorial.title}" to category: ${tutorial.category}`);
           }
           
           this.tutorials.set(tutorial.id, tutorial);
@@ -165,12 +171,18 @@ export class MemStorage implements IStorage {
             this.currentIds.tutorial = tutorial.id + 1;
           }
         });
+      } else {
+        console.log('Server: No tutorials found in Firebase');
+        throw new Error('No tutorials found in Firebase. Data loading failed.');
       }
       
       // Load tags
+      console.log('Server: Fetching tags from Firebase');
       const tags = await firebaseDB.getAllTags();
+      console.log(`Server: Fetched tags data:`, tags);
+      
       if (tags && tags.length > 0) {
-        console.log(`Loaded ${tags.length} tags from Firebase`);
+        console.log(`Server: Loaded ${tags.length} tags from Firebase`);
         
         // Clear existing tags and add Firebase tags
         this.tags.clear();
@@ -181,12 +193,17 @@ export class MemStorage implements IStorage {
             this.currentIds.tag = tag.id + 1;
           }
         });
+      } else {
+        console.log('Server: No tags found in Firebase');
       }
       
       // Load notes from Firebase
+      console.log('Server: Fetching notes from Firebase');
       const notes = await firebaseDB.getAllNotes();
+      console.log(`Server: Fetched notes data:`, notes);
+      
       if (notes && notes.length > 0) {
-        console.log(`Loaded ${notes.length} notes from Firebase`);
+        console.log(`Server: Loaded ${notes.length} notes from Firebase`);
         
         // Clear existing notes and add Firebase notes
         this.notes.clear();
@@ -197,6 +214,8 @@ export class MemStorage implements IStorage {
             this.currentIds.note = note.id + 1;
           }
         });
+      } else {
+        console.log('Server: No notes found in Firebase');
       }
       
       console.log('Successfully loaded data from Firebase');

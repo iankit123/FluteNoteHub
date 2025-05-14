@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "@shared/schema";
-import { apiRequest } from "@/lib/queryClient";
+import directFirebaseDB from "@/lib/directFirebase";
+import { useApi } from "./ApiContext";
 
 interface UserContextType {
   user: User | null;
@@ -16,6 +17,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const api = useApi();
 
   // Check for saved user on mount
   useEffect(() => {
@@ -35,22 +37,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       console.log("UserContext: Attempting login for", username);
-      const res = await apiRequest("POST", "/api/users/login", { username, password });
       
-      // Handle Response object directly returned from apiRequest
-      if (res instanceof Response) {
-        const userData = await res.json();
-        console.log("UserContext: Login successful, user data:", userData);
-        setUser(userData);
-        localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
-        return userData;
-      } 
+      // Use direct Firebase connection
+      const userData = await directFirebaseDB.loginUser(username, password);
       
-      // Handle pre-parsed JSON response
-      console.log("UserContext: Login successful, user data:", res);
-      setUser(res);
-      localStorage.setItem("fluteNotesUser", JSON.stringify(res));
-      return res;
+      if (!userData) {
+        throw new Error("Invalid credentials");
+      }
+      
+      console.log("UserContext: Login successful, user data:", userData);
+      setUser(userData);
+      localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
+      return userData;
     } catch (error) {
       console.error("Login failed", error);
       throw error;
@@ -63,26 +61,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       console.log("UserContext: Attempting registration for", username);
-      const res = await apiRequest("POST", "/api/users/register", { 
+      
+      // Use direct Firebase connection
+      const userData = await directFirebaseDB.registerUser({ 
         username, 
         displayName, 
         password 
       });
       
-      // Handle Response object directly returned from apiRequest
-      if (res instanceof Response) {
-        const userData = await res.json();
-        console.log("UserContext: Registration successful, user data:", userData);
-        setUser(userData);
-        localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
-        return userData;
+      if (!userData) {
+        throw new Error("Registration failed. Username may already exist.");
       }
       
-      // Handle pre-parsed JSON response
-      console.log("UserContext: Registration successful, user data:", res);
-      setUser(res);
-      localStorage.setItem("fluteNotesUser", JSON.stringify(res));
-      return res;
+      console.log("UserContext: Registration successful, user data:", userData);
+      setUser(userData);
+      localStorage.setItem("fluteNotesUser", JSON.stringify(userData));
+      return userData;
     } catch (error) {
       console.error("Registration failed", error);
       throw error;

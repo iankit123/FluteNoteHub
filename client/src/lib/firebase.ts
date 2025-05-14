@@ -20,9 +20,22 @@ const firebaseConfig = {
   measurementId: "G-NCP8XDCGBD"
 };
 
+console.log('Initializing Firebase with config:', JSON.stringify(firebaseConfig));
+
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+let app;
+let database;
+
+try {
+  app = initializeApp(firebaseConfig);
+  console.log('Firebase app initialized successfully');
+  
+  database = getDatabase(app);
+  console.log('Firebase database initialized successfully');
+} catch (error) {
+  console.error('Error initializing Firebase:', error);
+  throw new Error('Failed to initialize Firebase. See console for details.');
+}
 
 // Firebase Database Service
 export const firebaseDB = {
@@ -33,22 +46,32 @@ export const firebaseDB = {
   
   // Tutorials
   async getAllTutorials(): Promise<Tutorial[]> {
+    console.log('Firebase: getAllTutorials called');
     // Use cache if it's less than 10 seconds old
     const now = Date.now();
     if (this._tutorialsCache && now - this._lastFetchTime < 10000) {
+      console.log('Firebase: Using cached tutorials data');
       return this._tutorialsCache;
     }
     
     try {
+      console.log('Firebase: Fetching tutorials from database');
       const tutorialsRef = ref(database, 'tutorials');
+      console.log('Firebase: Tutorial reference created:', tutorialsRef.toString());
+      
       const snapshot = await get(tutorialsRef);
+      console.log('Firebase: Tutorial snapshot received, exists:', snapshot.exists());
       
       if (snapshot.exists()) {
         const tutorialsObj = snapshot.val();
+        console.log('Firebase: Raw tutorials data:', JSON.stringify(tutorialsObj));
+        
         const tutorials = Object.keys(tutorialsObj).map(key => ({
           id: parseInt(key),
           ...tutorialsObj[key]
         }));
+        
+        console.log(`Firebase: Processed ${tutorials.length} tutorials`);
         
         // Update cache
         this._tutorialsCache = tutorials;
@@ -56,35 +79,46 @@ export const firebaseDB = {
         
         return tutorials;
       }
+      console.log('Firebase: No tutorials found in database');
       return [];
     } catch (error) {
-      console.error("Error fetching tutorials:", error);
-      return this._tutorialsCache || [];
+      console.error("Firebase ERROR fetching tutorials:", error);
+      throw error; // Don't use cache, throw the error to make the issue visible
     }
   },
   
   // Notes
   async getAllNotes(): Promise<Note[]> {
+    console.log('Firebase: getAllNotes called');
     try {
+      console.log('Firebase: Fetching notes from database');
       const notesRef = ref(database, 'notes');
+      console.log('Firebase: Notes reference created:', notesRef.toString());
+      
       const snapshot = await get(notesRef);
+      console.log('Firebase: Notes snapshot received, exists:', snapshot.exists());
       
       if (snapshot.exists()) {
         const notesObj = snapshot.val();
+        console.log('Firebase: Raw notes data:', JSON.stringify(notesObj));
+        
         const notes = Object.keys(notesObj).map(key => ({
           id: parseInt(key),
           ...notesObj[key]
         }));
+        
+        console.log(`Firebase: Processed ${notes.length} notes`);
         
         // Update cache
         this._notesCache = notes;
         
         return notes;
       }
+      console.log('Firebase: No notes found in database');
       return [];
     } catch (error) {
-      console.error("Error fetching notes:", error);
-      return this._notesCache || [];
+      console.error("Firebase ERROR fetching notes:", error);
+      throw error; // Don't use cache, throw the error to make the issue visible
     }
   },
   
