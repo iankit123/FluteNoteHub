@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getDatabase, ref, set, get, remove, push, child, update } from "firebase/database";
 import type { 
   Tutorial, InsertTutorial, 
@@ -9,70 +8,21 @@ import type {
   CommunityComment, InsertCommunityComment
 } from "@shared/schema";
 
-// Detect environment - browser or server
-const isBrowser = typeof window !== 'undefined';
-
-// Hardcoded Firebase configuration for both client and server contexts
+// Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAXggS45GgtQEDKt7ylTmKMXIg2PPfmCB4",
   authDomain: "flute-notes-f985e.firebaseapp.com",
-  projectId: "flute-notes-f985e",
   databaseURL: "https://flute-notes-f985e-default-rtdb.firebaseio.com",
+  projectId: "flute-notes-f985e",
   storageBucket: "flute-notes-f985e.firebasestorage.app",
   messagingSenderId: "461328034114",
   appId: "1:461328034114:web:6bc32ef02899cd0932c0db",
   measurementId: "G-NCP8XDCGBD"
 };
 
-console.log('Firebase initialization - running in:', isBrowser ? 'browser' : 'server');
-console.log('Firebase config:', {
-  apiKey: firebaseConfig.apiKey ? '✓ Present' : '✗ Missing',
-  authDomain: firebaseConfig.authDomain,
-  projectId: firebaseConfig.projectId,
-  databaseURL: firebaseConfig.databaseURL,
-  storageBucket: firebaseConfig.storageBucket,
-  messagingSenderId: '✓ Present',
-  appId: '✓ Present',
-  measurementId: firebaseConfig.measurementId
-});
-
 // Initialize Firebase
-let app;
-let database;
-let analytics;
-
-try {
-  console.log('Initializing Firebase app...');
-  app = initializeApp(firebaseConfig);
-  console.log('Firebase app initialized successfully');
-  
-  console.log('Initializing Firebase database...');
-  database = getDatabase(app);
-  console.log('Firebase database initialized successfully, database URL:', firebaseConfig.databaseURL);
-  
-  // Only initialize analytics in browser environment
-  if (isBrowser) {
-    console.log('Initializing Firebase analytics in browser...');
-    try {
-      analytics = getAnalytics(app);
-      console.log('Firebase analytics initialized successfully');
-    } catch (analyticsError) {
-      console.error('Error initializing Firebase analytics (non-critical):', analyticsError);
-      // Continue without analytics
-    }
-  } else {
-    console.log('Skipping Firebase analytics initialization in server environment');
-  }
-} catch (error) {
-  console.error('Error initializing Firebase:', error);
-  console.error('Firebase config that caused the error:', JSON.stringify({
-    authDomain: firebaseConfig.authDomain,
-    projectId: firebaseConfig.projectId,
-    databaseURL: firebaseConfig.databaseURL,
-    storageBucket: firebaseConfig.storageBucket
-  }));
-  throw error;
-}
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 // Firebase Database Service
 export const firebaseDB = {
@@ -83,34 +33,18 @@ export const firebaseDB = {
   
   // Tutorials
   async getAllTutorials(): Promise<Tutorial[]> {
-    console.log('getAllTutorials called');
     // Use cache if it's less than 10 seconds old
     const now = Date.now();
     if (this._tutorialsCache && now - this._lastFetchTime < 10000) {
-      console.log('Using cached tutorials data');
       return this._tutorialsCache;
     }
     
     try {
-      console.log('Fetching tutorials from Firebase...');
-      console.log('Database instance available:', !!database);
-      
-      if (!database) {
-        console.error('Database is not initialized!');
-        return [];
-      }
-      
       const tutorialsRef = ref(database, 'tutorials');
-      console.log('Tutorial reference created:', tutorialsRef.key);
-      
-      console.log('Getting snapshot from tutorials reference...');
       const snapshot = await get(tutorialsRef);
-      console.log('Snapshot received, exists:', snapshot.exists());
       
       if (snapshot.exists()) {
         const tutorialsObj = snapshot.val();
-        console.log('Tutorial data received, keys:', Object.keys(tutorialsObj).length);
-        
         const tutorials = Object.keys(tutorialsObj).map(key => ({
           id: parseInt(key),
           ...tutorialsObj[key]
@@ -120,22 +54,17 @@ export const firebaseDB = {
         this._tutorialsCache = tutorials;
         this._lastFetchTime = now;
         
-        console.log('Tutorials processed successfully, count:', tutorials.length);
         return tutorials;
-      } else {
-        console.log('No tutorials found in database');
-        return [];
       }
+      return [];
     } catch (error) {
       console.error("Error fetching tutorials:", error);
-      console.error("Error details:", error instanceof Error ? error.message : 'Unknown error');
-      console.error("Error stack:", error instanceof Error ? error.stack : 'No stack available');
-      throw error;
+      return this._tutorialsCache || [];
     }
   },
   
+  // Notes
   async getAllNotes(): Promise<Note[]> {
-    console.log('getAllNotes called');
     try {
       const notesRef = ref(database, 'notes');
       const snapshot = await get(notesRef);

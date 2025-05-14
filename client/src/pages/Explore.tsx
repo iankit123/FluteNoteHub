@@ -7,9 +7,7 @@ import TutorialCard from "@/components/TutorialCard";
 import { useUser } from "@/context/UserContext";
 import CategoryFilter from "@/components/CategoryFilter";
 import AddNoteButton from "@/components/AddNoteButton";
-import { BookOpen, Music, AlertCircle } from "lucide-react";
-import logger, { isProduction, debugFetch } from "@/lib/debug";
-import { apiRequest } from "@/lib/queryClient";
+import { BookOpen, Music } from "lucide-react";
 
 export default function Explore() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -52,134 +50,13 @@ export default function Explore() {
       });
   };
 
-  // Add detailed logging for the Explore component
-  useEffect(() => {
-    logger.info('Explore component mounted');
-    logger.debug('Environment:', isProduction ? 'Production' : 'Development');
-    logger.debug('Active category:', activeCategory);
-    logger.debug('Active tab:', activeTab);
-    
-    // Direct API call to debug
-    const debugApiCalls = async () => {
-      try {
-        logger.debug('Making direct API call to /api/tutorials for debugging');
-        const tutorialsResponse = await debugFetch('/api/tutorials');
-        const tutorialsData = await tutorialsResponse.json();
-        logger.debug('Direct API call result for tutorials:', tutorialsData);
-        
-        logger.debug('Making direct API call to /api/explore for debugging');
-        const exploreResponse = await debugFetch('/api/explore');
-        const exploreData = await exploreResponse.json();
-        logger.debug('Direct API call result for explore:', exploreData);
-      } catch (error) {
-        logger.error('Debug API call failed:', error);
-      }
-    };
-    
-    // Run the debug API calls
-    debugApiCalls();
-    
-    return () => {
-      logger.info('Explore component unmounted');
-    };
-  }, []);
-
-  // Enhanced queries with error handling and logging
-  const { 
-    data: tutorials, 
-    isLoading: tutorialsLoading,
-    error: tutorialsError 
-  } = useQuery<any[], Error>({
-    queryKey: ["/api/tutorials"]
+  const { data: tutorials, isLoading: tutorialsLoading } = useQuery({
+    queryKey: ["/api/tutorials"],
   });
 
-  // Log tutorials data whenever it changes
-  useEffect(() => {
-    if (tutorials) {
-      logger.info('Tutorials data loaded successfully');
-      logger.debug('Tutorials data:', tutorials);
-    }
-    if (tutorialsError) {
-      logger.error('Failed to load tutorials data:', tutorialsError);
-    }
-  }, [tutorials, tutorialsError]);
-
-  // Mock user data to use as fallback when API fails
-  const mockUsers = [
-    {
-      id: 1,
-      username: 'fluteMaster',
-      name: 'John Smith',
-      profilePicture: 'https://i.pravatar.cc/150?img=1',
-      bio: 'Professional flutist with 15 years of experience'
-    },
-    {
-      id: 2,
-      username: 'fluteStudent',
-      name: 'Sarah Johnson',
-      profilePicture: 'https://i.pravatar.cc/150?img=5',
-      bio: 'Learning flute for 2 years, passionate about classical music'
-    },
-    {
-      id: 3,
-      username: 'musicTeacher',
-      name: 'David Wilson',
-      profilePicture: 'https://i.pravatar.cc/150?img=3',
-      bio: 'Music teacher specializing in woodwind instruments'
-    },
-    {
-      id: 4,
-      username: 'fluteEnthusiast',
-      name: 'Emily Chen',
-      profilePicture: 'https://i.pravatar.cc/150?img=9',
-      bio: 'Hobbyist flutist who loves sharing tips and tricks'
-    }
-  ];
-
-  // Query for users data with fallback to mock data
-  const { 
-    data: users, 
-    isLoading: usersLoading,
-    error: usersError 
-  } = useQuery<any[], Error>({
+  const { data: users, isLoading: usersLoading } = useQuery({
     queryKey: ["/api/users"],
-    retry: 1 // Only retry once to avoid excessive requests
   });
-
-  // Use mock users if the API fails
-  const effectiveUsers = users || mockUsers;
-
-  // Log users data whenever it changes
-  useEffect(() => {
-    if (users) {
-      logger.info('Users data loaded successfully');
-      logger.debug('Users data:', users);
-    }
-    if (usersError) {
-      logger.error('Failed to load users data:', usersError);
-      logger.info('Using mock user data as fallback');
-    }
-  }, [users, usersError]);
-  
-  // Additional query for explore-specific data
-  const { 
-    data: exploreData, 
-    isLoading: exploreLoading,
-    error: exploreError 
-  } = useQuery<any, Error>({
-    queryKey: ["/api/explore"]
-  });
-
-  // Log explore data whenever it changes
-  useEffect(() => {
-    if (exploreData) {
-      logger.info('Explore data loaded successfully');
-      logger.debug('Explore data:', exploreData);
-    }
-    if (exploreError) {
-      logger.error('Failed to load explore data:', exploreError);
-    }
-  }, [exploreData, exploreError]);
 
   // Check if hash is present and use it to set active tab
   useEffect(() => {
@@ -200,35 +77,12 @@ export default function Explore() {
     return user ? user.displayName : "Unknown";
   };
 
-  // Debug the tutorial data structure
-  useEffect(() => {
-    if (tutorials && Array.isArray(tutorials) && tutorials.length > 0) {
-      logger.debug('Tutorial data structure example:', tutorials[0]);
-    }
-  }, [tutorials]);
-
-  // Use exploreData if available, otherwise fall back to tutorials
-  const allTutorials = exploreData?.tutorials || tutorials;
-
-  // Filter tutorials by category with more lenient filtering
+  // Filter tutorials by category
   const filteredTutorials =
-    allTutorials && Array.isArray(allTutorials)
-      ? allTutorials.filter((tutorial: any) => {
-          // For debugging
-          if (allTutorials.length > 0 && tutorial === allTutorials[0]) {
-            logger.debug('Filtering tutorial:', tutorial);
-            logger.debug('Active tab:', activeTab);
-            logger.debug('Active category:', activeCategory);
-          }
-          
-          // If no category property exists, show all tutorials
-          if (!tutorial.hasOwnProperty('category')) {
-            return true;
-          }
-          
+    tutorials && Array.isArray(tutorials)
+      ? tutorials.filter((tutorial: Tutorial) => {
           // Filter by content category (learning/music)
-          // Be more lenient - if category doesn't match any known value, show it
-          const matchesTab = !tutorial.category || tutorial.category === activeTab;
+          const matchesTab = tutorial.category === activeTab;
 
           // Filter by user-selected category (all/youtube/website/text)
           const matchesCategory =
@@ -250,11 +104,10 @@ export default function Explore() {
     { id: "text", name: "Text" },
   ];
 
-  // Display loading state
-  if (tutorialsLoading || usersLoading || exploreLoading) {
+  if (tutorialsLoading || usersLoading) {
     return (
-      <div className="flex flex-col justify-center items-center h-[60vh]">
-        <div className="animate-spin text-royal-purple h-12 w-12 mb-4">
+      <div className="flex justify-center items-center h-[60vh]">
+        <div className="animate-spin text-royal-purple h-12 w-12">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -276,53 +129,7 @@ export default function Explore() {
             ></path>
           </svg>
         </div>
-        <p className="text-gray-600">Loading content...</p>
-        <p className="text-xs text-gray-400 mt-2">{isProduction ? 'Production' : 'Development'} environment</p>
       </div>
-    );
-  }
-  
-  // Display errors if any
-  if (tutorialsError || exploreError) {
-    return (
-      <>
-        <NavigationBar />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <AlertCircle className="h-5 w-5 text-red-500" />
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">Error loading content</h3>
-                <div className="mt-2 text-sm text-red-700">
-                  <p>There was an error loading the content. Please try again later.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Debugging information */}
-          <div className="bg-gray-100 p-4 rounded-md mt-6">
-            <h3 className="text-sm font-medium text-gray-800 mb-2">Debug Information</h3>
-            <div className="text-xs font-mono bg-white p-3 rounded border overflow-auto max-h-[300px]">
-              <p>Environment: {isProduction ? 'Production' : 'Development'}</p>
-              <p>Tutorials Error: {tutorialsError?.message || 'None'}</p>
-              <p>Users Error: {usersError?.message || 'None'}</p>
-              <p>Explore Error: {exploreError?.message || 'None'}</p>
-              <p className="mt-2">API Endpoints:</p>
-              <ul className="list-disc pl-5">
-                <li>/api/tutorials</li>
-                <li>/api/users</li>
-                <li>/api/explore</li>
-              </ul>
-              <p className="mt-2">Tutorials Data: {tutorials ? `${tutorials.length} items` : 'No data'}</p>
-              <p>Users Data: {users ? `${users.length} items` : 'No data'} {usersError ? '(Using mock data)' : ''}</p>
-              <p>Explore Data: {exploreData ? 'Available' : 'No data'}</p>
-            </div>
-          </div>
-        </div>
-      </>
     );
   }
 

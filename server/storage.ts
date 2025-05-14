@@ -139,17 +139,10 @@ export class MemStorage implements IStorage {
   // Load data from Firebase and populate MemStorage
   private async loadFromFirebase() {
     try {
-      // Import server-side Firebase configuration
-      const { firebaseDB } = await import('./firebase');
-      console.log('Server Firebase connection status:', firebaseDB.isConnected() ? 'Connected' : 'Not connected');
-      
-      // Import client-side Firebase for data methods
-      const { firebaseDB: clientFirebaseDB } = await import('@/lib/firebase');
-      console.log('Client Firebase methods available:', !!clientFirebaseDB);
+      const { firebaseDB } = await import('@/lib/firebase');
       
       // Load tutorials from Firebase
-      console.log('Attempting to load tutorials from Firebase...');
-      const tutorials = await clientFirebaseDB.getAllTutorials();
+      const tutorials = await firebaseDB.getAllTutorials();
       if (tutorials && tutorials.length > 0) {
         console.log(`Loaded ${tutorials.length} tutorials from Firebase`);
         
@@ -175,7 +168,7 @@ export class MemStorage implements IStorage {
       }
       
       // Load tags
-      const tags = await clientFirebaseDB.getAllTags();
+      const tags = await firebaseDB.getAllTags();
       if (tags && tags.length > 0) {
         console.log(`Loaded ${tags.length} tags from Firebase`);
         
@@ -191,7 +184,7 @@ export class MemStorage implements IStorage {
       }
       
       // Load notes from Firebase
-      const notes = await clientFirebaseDB.getAllNotes();
+      const notes = await firebaseDB.getAllNotes();
       if (notes && notes.length > 0) {
         console.log(`Loaded ${notes.length} notes from Firebase`);
         

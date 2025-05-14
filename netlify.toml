@@ -1,35 +1,12 @@
 [build]
   command = "npm run build"
   publish = "dist/public"
-  functions = "netlify/functions"
-
-# Redirect API requests to the appropriate function
-[[redirects]]
-  from = "/api/users/login"
-  to = "/.netlify/functions/login"
-  status = 200
 
 [[redirects]]
-  from = "/api/users"
-  to = "/.netlify/functions/users"
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
   status = 200
 
-[[redirects]]
-  from = "/api/tutorials"
-  to = "/.netlify/functions/tutorials"
-  status = 200
-
-[[redirects]]
-  from = "/api/tags"
-  to = "/.netlify/functions/tags"
-  status = 200
-
-[[redirects]]
-  from = "/api/explore"
-  to = "/.netlify/functions/explore"
-  status = 200
-
-# For all other routes, serve the SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -37,12 +14,12 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  FIREBASE_API_KEY = "AIzaSyAXggS45GgtQEDKt7ylTmKMXIg2PPfmCB4"
-  FIREBASE_AUTH_DOMAIN = "flute-notes-f985e.firebaseapp.com"
-  FIREBASE_PROJECT_ID = "flute-notes-f985e"
-  FIREBASE_DATABASE_URL = "https://flute-notes-f985e-default-rtdb.firebaseio.com"
-  FIREBASE_STORAGE_BUCKET = "flute-notes-f985e.firebasestorage.app"
-  FIREBASE_MESSAGING_SENDER_ID = "461328034114"
-  FIREBASE_APP_ID = "1:461328034114:web:6bc32ef02899cd0932c0db"
-  FIREBASE_MEASUREMENT_ID = "G-NCP8XDCGBD"
   NPM_FLAGS = "--version"
+  VITE_FIREBASE_API_KEY = "AIzaSyAXggS45GgtQEDKt7ylTmKMXIg2PPfmCB4"
+  VITE_FIREBASE_AUTH_DOMAIN = "flute-notes-f985e.firebaseapp.com"
+  VITE_FIREBASE_PROJECT_ID = "flute-notes-f985e"
+  VITE_FIREBASE_DATABASE_URL = "https://flute-notes-f985e-default-rtdb.firebaseio.com"
+  VITE_FIREBASE_STORAGE_BUCKET = "flute-notes-f985e.firebasestorage.app"
+  VITE_FIREBASE_MESSAGING_SENDER_ID = "461328034114"
+  VITE_FIREBASE_APP_ID = "1:461328034114:web:6bc32ef02899cd0932c0db"
+  VITE_FIREBASE_MEASUREMENT_ID = "G-NCP8XDCGBD"

@@ -2,7 +2,6 @@ import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Explore from "@/pages/Explore";
-import DebugExplore from "@/pages/DebugExplore";
 import Community from "@/pages/Community";
 import Profile from "@/pages/Profile";
 import EditNote from "@/pages/EditNote";
@@ -22,7 +21,6 @@ function App() {
         <Route path="/test" component={Test} />
         <Route path="/" component={Home} />
         <Route path="/explore" component={Explore} />
-        <Route path="/debug-explore" component={DebugExplore} />
         <Route path="/community" component={Community} />
         <Route path="/metronome" component={Metronome} />
         <Route path="/profile" component={Profile} />
