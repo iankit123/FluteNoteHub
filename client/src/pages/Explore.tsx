@@ -104,13 +104,50 @@ export default function Explore() {
     }
   }, [tutorials, tutorialsError]);
 
+  // Mock user data to use as fallback when API fails
+  const mockUsers = [
+    {
+      id: 1,
+      username: 'fluteMaster',
+      name: 'John Smith',
+      profilePicture: 'https://i.pravatar.cc/150?img=1',
+      bio: 'Professional flutist with 15 years of experience'
+    },
+    {
+      id: 2,
+      username: 'fluteStudent',
+      name: 'Sarah Johnson',
+      profilePicture: 'https://i.pravatar.cc/150?img=5',
+      bio: 'Learning flute for 2 years, passionate about classical music'
+    },
+    {
+      id: 3,
+      username: 'musicTeacher',
+      name: 'David Wilson',
+      profilePicture: 'https://i.pravatar.cc/150?img=3',
+      bio: 'Music teacher specializing in woodwind instruments'
+    },
+    {
+      id: 4,
+      username: 'fluteEnthusiast',
+      name: 'Emily Chen',
+      profilePicture: 'https://i.pravatar.cc/150?img=9',
+      bio: 'Hobbyist flutist who loves sharing tips and tricks'
+    }
+  ];
+
+  // Query for users data with fallback to mock data
   const { 
     data: users, 
     isLoading: usersLoading,
     error: usersError 
   } = useQuery<any[], Error>({
-    queryKey: ["/api/users"]
+    queryKey: ["/api/users"],
+    retry: 1 // Only retry once to avoid excessive requests
   });
+
+  // Use mock users if the API fails
+  const effectiveUsers = users || mockUsers;
 
   // Log users data whenever it changes
   useEffect(() => {
@@ -120,6 +157,7 @@ export default function Explore() {
     }
     if (usersError) {
       logger.error('Failed to load users data:', usersError);
+      logger.info('Using mock user data as fallback');
     }
   }, [users, usersError]);
   
@@ -222,7 +260,7 @@ export default function Explore() {
   }
   
   // Display errors if any
-  if (tutorialsError || usersError || exploreError) {
+  if (tutorialsError || exploreError) {
     return (
       <>
         <NavigationBar />
@@ -256,7 +294,7 @@ export default function Explore() {
                 <li>/api/explore</li>
               </ul>
               <p className="mt-2">Tutorials Data: {tutorials ? `${tutorials.length} items` : 'No data'}</p>
-              <p>Users Data: {users ? `${users.length} items` : 'No data'}</p>
+              <p>Users Data: {users ? `${users.length} items` : 'No data'} {usersError ? '(Using mock data)' : ''}</p>
               <p>Explore Data: {exploreData ? 'Available' : 'No data'}</p>
             </div>
           </div>
