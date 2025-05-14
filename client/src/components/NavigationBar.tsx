@@ -107,22 +107,63 @@ const NavigationBar: React.FC = () => {
           </div>
           
           {/* Main Navigation */}
-          <div className="flex items-center">
+          <nav className="flex space-x-4">
+            <Link
+              to="/"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${location === '/' ? 'bg-royal-purple text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+            >
+              Home
+            </Link>
+            <Link
+              to="/explore"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${location === '/explore' ? 'bg-royal-purple text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+            >
+              Explore
+            </Link>
+            <Link
+              to="/debug-explore"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${location === '/debug-explore' ? 'bg-royal-purple text-white' : 'text-gray-700 hover:bg-gray-100 border border-dashed border-gray-300'}`}
+            >
+              Debug
+            </Link>
+            {navItems.map((item) => (
+              <Link 
+                key={item.name} 
+                href={item.href} 
+                className={`font-medium hover:text-turmeric-yellow transition-colors flex items-center ${isActive(item.href) ? 'text-turmeric-yellow' : ''}`}
+              >
+                {item.icon} {item.name}
+              </Link>
+            ))}
             
-            <div className="hidden md:flex items-center space-x-6">
-              {navItems.map((item) => (
-                <Link 
-                  key={item.name} 
-                  href={item.href} 
-                  className={`font-medium hover:text-turmeric-yellow transition-colors flex items-center ${isActive(item.href) ? 'text-turmeric-yellow' : ''}`}
+            {isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => setShowGradientSelector(!showGradientSelector)}
+                  className="mr-4 p-2 hover:text-turmeric-yellow transition-colors rounded-full bg-royal-purple/30"
+                  title="Change navigation colors"
                 >
-                  {item.icon} {item.name}
-                </Link>
-              ))}
-              
-              {isAuthenticated ? (
-                <>
-                  <button
+                  <Palette className="h-5 w-5" />
+                </button>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="font-medium hover:text-turmeric-yellow transition-colors p-1 rounded-full bg-royal-purple/30">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.avatar || ""} alt={user?.displayName} />
+                        <AvatarFallback>{user?.displayName?.charAt(0) || "U"}</AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="flex items-center p-2">
+                      <Avatar className="h-8 w-8 mr-2">
+                        <AvatarImage src={user?.avatar || ""} alt={user?.displayName} />
+                        <AvatarFallback>{user?.displayName?.charAt(0) || "U"}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <p className="text-sm font-medium">{user?.displayName}</p>
+                        <p className="text-xs text-muted-foreground">@{user?.username}</p>
                     onClick={() => setShowGradientSelector(!showGradientSelector)}
                     className="mr-4 p-2 hover:text-turmeric-yellow transition-colors rounded-full bg-royal-purple/30"
                     title="Change navigation colors"

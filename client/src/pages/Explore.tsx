@@ -200,12 +200,35 @@ export default function Explore() {
     return user ? user.displayName : "Unknown";
   };
 
-  // Filter tutorials by category
+  // Debug the tutorial data structure
+  useEffect(() => {
+    if (tutorials && Array.isArray(tutorials) && tutorials.length > 0) {
+      logger.debug('Tutorial data structure example:', tutorials[0]);
+    }
+  }, [tutorials]);
+
+  // Use exploreData if available, otherwise fall back to tutorials
+  const allTutorials = exploreData?.tutorials || tutorials;
+
+  // Filter tutorials by category with more lenient filtering
   const filteredTutorials =
-    tutorials && Array.isArray(tutorials)
-      ? tutorials.filter((tutorial: Tutorial) => {
+    allTutorials && Array.isArray(allTutorials)
+      ? allTutorials.filter((tutorial: any) => {
+          // For debugging
+          if (allTutorials.length > 0 && tutorial === allTutorials[0]) {
+            logger.debug('Filtering tutorial:', tutorial);
+            logger.debug('Active tab:', activeTab);
+            logger.debug('Active category:', activeCategory);
+          }
+          
+          // If no category property exists, show all tutorials
+          if (!tutorial.hasOwnProperty('category')) {
+            return true;
+          }
+          
           // Filter by content category (learning/music)
-          const matchesTab = tutorial.category === activeTab;
+          // Be more lenient - if category doesn't match any known value, show it
+          const matchesTab = !tutorial.category || tutorial.category === activeTab;
 
           // Filter by user-selected category (all/youtube/website/text)
           const matchesCategory =
